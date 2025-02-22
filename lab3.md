@@ -151,4 +151,32 @@ ORDER BY(Professors.salary)
 ```
 
 
+### 69
+
+Найдите ФИО всех девушек среди студентов (пол определить по окончанию фамилии или отчества).  Используя найденную информацию выведите всех юношей среди студентов.
+    
+<img width="477" alt="image" src="https://github.com/user-attachments/assets/7287012d-4612-446e-8477-7e9f16396fd7" />
+
+
+```sql
+with female AS(
+SELECT last_name, first_name, patronymic
+FROM Students
+WHERE  last_name LIKE '%а' 
+        OR last_name LIKE '%я' 
+        OR patronymic LIKE '%на' 
+        OR patronymic LIKE '%ич'
+
+)
+
+SELECT last_name, first_name, patronymic
+FROM Students
+EXCEPT (SELECT 
+    last_name, 
+    first_name, 
+    patronymic
+FROM 
+    female)
+
+```
 
