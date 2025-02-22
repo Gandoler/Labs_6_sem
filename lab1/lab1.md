@@ -1,4 +1,4 @@
-# lab 3
+<img width="997" alt="image" src="https://github.com/user-attachments/assets/e50f832f-34b2-4e8d-92e2-21978bd58606" /># lab 3
 ## Num 1
 <img width="590" alt="image" src="https://github.com/user-attachments/assets/e43de129-60dd-4b0d-aa19-ae26f7b7fda7" />
 <img width="465" alt="image" src="https://github.com/user-attachments/assets/64067ef0-8ac2-471b-9a03-79c8be83fa63" />
@@ -13,9 +13,13 @@
 <img width="603" alt="image" src="https://github.com/user-attachments/assets/202b4311-98d4-4434-b7e4-374158e5e96a" />
 
 ### 9
-<img width="517" alt="image" src="https://github.com/user-attachments/assets/03a1587f-80c7-499c-ada4-1097fa30a032" />
+9.	Вывести ФИО преподавателей, названия преподаваемых ими дисциплин. Отсортировать по фамилии и имени.
 <img width="913" alt="image" src="https://github.com/user-attachments/assets/26c8a20d-4664-4f77-b2eb-62c87de7b569" />
 
 ### 19
-<img width="996" alt="image" src="https://github.com/user-attachments/assets/b2048bb4-5fd5-4626-b234-6fd50c004ef9" />
+19.	Вывести ФИО всех студентов с оценками, освоивших дисциплину «Философия» меньше, чем на 4. Отсортировать по фамилии и имени.
 <img width="697" alt="image" src="https://github.com/user-attachments/assets/adb731ef-6811-435b-b4ba-266706ee9c17" />
+
+### 29
+29.	Подсчитать количество всех оценок у студентов чьи номера студенческих билетов лежат в интервале 820000–850000. Вывести фамилию, имя, номер студенческого, оценку и ее количество. Исключить из подсчета незаполненные поля оценок. Отсортировать по номеру студенческого билета.
+
