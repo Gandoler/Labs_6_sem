@@ -63,3 +63,18 @@ CHECK (room_number ~ '^[134][1-3][0-3][0-9]$');
 ```
 
 
+
+```sql
+INSERT INTO structural_units (full_title, abbreviated_title, head_of_the_unit, phone_number, room_number)
+VALUES ('Подразделение 1', 'П1', 'Иванов И.И.', '12-34', '1305');  --правильно
+
+
+
+INSERT INTO structural_units (full_title, abbreviated_title, head_of_the_unit, phone_number, room_number)
+VALUES ('Подразделение 2', 'П2', 'Петров П.П.', '56-78', '2505');  --непраивильно
+
+
+```
+<img width="774" alt="image" src="https://github.com/user-attachments/assets/06d239d9-0e28-4e3a-86c9-09c4216228be" />
+
+
