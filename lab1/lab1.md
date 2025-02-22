@@ -13,13 +13,30 @@
 <img width="603" alt="image" src="https://github.com/user-attachments/assets/202b4311-98d4-4434-b7e4-374158e5e96a" />
 
 ### 9
-9.	Вывести ФИО преподавателей, названия преподаваемых ими дисциплин. Отсортировать по фамилии и имени.
+Вывести ФИО преподавателей, названия преподаваемых ими дисциплин. Отсортировать по фамилии и имени.
 <img width="913" alt="image" src="https://github.com/user-attachments/assets/26c8a20d-4664-4f77-b2eb-62c87de7b569" />
-
+'''sql
+SELECT Professors.last_name, Professors.first_name, Professors.patronymic, Fields.field_name
+FROM Professors
+JOIN Fields ON Fields.professor_id = Professors.professor_id
+ORDER BY Professors.last_name, Professors.first_name;
+'''
 ### 19
-19.	Вывести ФИО всех студентов с оценками, освоивших дисциплину «Философия» меньше, чем на 4. Отсортировать по фамилии и имени.
+Вывести ФИО всех студентов с оценками, освоивших дисциплину «Философия» меньше, чем на 4. Отсортировать по фамилии и имени.
 <img width="697" alt="image" src="https://github.com/user-attachments/assets/adb731ef-6811-435b-b4ba-266706ee9c17" />
-
+'''sql
+with Field_and_Marks AS(
+SELECT  Field_comprehensions.student_id,field_name, mark
+FROM Fields
+JOIN Field_comprehensions ON Field_comprehensions.field = Fields.field_id
+WHERE field_name = 'Философия' AND Field_comprehensions.mark < 4
+)
+SELECT last_name, first_name, patronymic 
+FROM Students
+JOIN Field_and_Marks ON Field_and_Marks.student_id = Students.student_id
+ORDER BY Students.last_name, Students.first_name
+'''
 ### 29
-29.	Подсчитать количество всех оценок у студентов чьи номера студенческих билетов лежат в интервале 820000–850000. Вывести фамилию, имя, номер студенческого, оценку и ее количество. Исключить из подсчета незаполненные поля оценок. Отсортировать по номеру студенческого билета.
+Подсчитать количество всех оценок у студентов чьи номера студенческих билетов лежат в интервале 820000–850000. Вывести фамилию, имя, номер студенческого, оценку и ее количество. Исключить из подсчета незаполненные поля оценок. Отсортировать по номеру студенческого билета.
+
 
