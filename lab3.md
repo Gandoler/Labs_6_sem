@@ -181,4 +181,29 @@ FROM
 ```
 
 ### 79
-Вывести фамилия, имя и оклад всех преподавателей, чей оклад меньше среднего. Отсортируйте по окладу в порядке убывания. Первой строчкой выведите средний оклад.  
+Вывести фамилия, имя и оклад всех преподавателей, чей оклад меньше среднего. Отсортируйте по окладу в порядке убывания. Первой строчкой выведите средний оклад.
+
+<img width="671" alt="image" src="https://github.com/user-attachments/assets/65d3647b-aac1-4a94-b7ab-992401656e4d" />
+
+```sql
+
+SELECT 
+    'Средний оклад' AS last_name, 
+    NULL AS first_name, 
+    (AVG(salary::NUMERIC))::MONEY AS salary
+FROM 
+    Professors
+
+UNION ALL
+
+SELECt last_name, first_name,  salary
+FROM 
+    Professors
+WHERE 
+    salary::NUMERIC < (SELECT AVG(salary::NUMERIC) FROM Professors)
+ORDER BY 
+    salary DESC;
+
+
+```
+
