@@ -8,3 +8,10 @@
 
 <img width="460" alt="image" src="https://github.com/user-attachments/assets/ecf1520f-2a4f-4849-862f-7549e6bee4a7" />
 
+## Num 2
+
+<img width="603" alt="image" src="https://github.com/user-attachments/assets/202b4311-98d4-4434-b7e4-374158e5e96a" />
+
+### 9
+<img width="517" alt="image" src="https://github.com/user-attachments/assets/03a1587f-80c7-499c-ada4-1097fa30a032" />
+<img width="913" alt="image" src="https://github.com/user-attachments/assets/26c8a20d-4664-4f77-b2eb-62c87de7b569" />
