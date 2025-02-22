@@ -72,4 +72,44 @@ ORDER BY
 Выведите полные названия структурных подразделений, название групп в него входящих и количество студентов в каждой группе.  Оставьте только группы содержащие в своем названии буквы “В” и “Б” и оканчивающиеся цифрой “1”. Отсортируйте по номеру группы.
 
 
+<img width="703" alt="image" src="https://github.com/user-attachments/assets/4ea10472-9aa8-43d3-87c0-4dc92089b7e3" />
+
+'''sql
+WITH students_in_group AS (
+    SELECT 
+        Students_groups.students_group_number, 
+        COUNT(Students.student_id) AS amount
+    FROM Students_groups
+    JOIN Students ON Students_groups.students_group_number = Students.students_group_number
+    GROUP BY Students_groups.students_group_number
+)
+
+SELECT Structural_units.full_title, Students_groups.students_group_number, students_in_group.amount
+FROM Structural_units
+JOIN Students_groups ON Students_groups.structural_unit_id = Structural_units.structural_unit_id
+JOIN students_in_group ON students_in_group.students_group_number = Students_groups.students_group_number
+WHERE Students_groups.students_group_number ~ '.*[ВБ].*1$'
+ORDER BY(Students_groups.students_group_number)
+
+'''
+
+### 49
+
+Вывести всех руководителей структурных подразделений, их номера телефонов и ФИ и электронные почты всех студентов
+
+<img width="918" alt="image" src="https://github.com/user-attachments/assets/5f67442d-21b5-49f2-a659-5b3bc73b478d" />
+
+'''sql
+SELECT Structural_units.head_of_the_unit, Structural_units.phone_number,
+		Students.last_name, Students.first_name, Students.email
+FROM Structural_units
+JOIN Students_groups ON Students_groups.structural_unit_id = Structural_units.structural_unit_id
+JOIN Students ON Students_groups.students_group_number = Students.students_group_number
+'''
+
+
+### 59
+
+Вывести ФИО, оклад и должность всех преподавателей, кроме преподавателей МПСУ. Сортировать по убыванию оклада. Использовать EXCEPT.
+
 
