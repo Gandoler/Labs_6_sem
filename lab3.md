@@ -243,9 +243,20 @@ CROSS JOIN
     avg_markIn_ITD 
 WHERE     avg_mark_students.avg_mark > avg_markIn_ITD.avg_mark;
 
+```
+
+### 99
+<img width="699" alt="image" src="https://github.com/user-attachments/assets/a5bb08b9-1a06-4d70-b5a1-828d67b99f14" />
 
 
-
- 
-
+```sql
+SELECT 
+    last_name, 
+    first_name, 
+    patronymic, 
+    birthday
+FROM 
+    Students
+WHERE 
+    birthday = (SELECT MAX(birthday) FROM Students);
 ```
