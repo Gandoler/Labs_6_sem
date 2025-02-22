@@ -1,4 +1,4 @@
-<img width="997" alt="image" src="https://github.com/user-attachments/assets/e50f832f-34b2-4e8d-92e2-21978bd58606" /># lab 3
+# lab 3
 ## Num 1
 <img width="590" alt="image" src="https://github.com/user-attachments/assets/e43de129-60dd-4b0d-aa19-ae26f7b7fda7" />
 <img width="465" alt="image" src="https://github.com/user-attachments/assets/64067ef0-8ac2-471b-9a03-79c8be83fa63" />
