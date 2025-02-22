@@ -17,19 +17,19 @@
 
 <img width="913" alt="image" src="https://github.com/user-attachments/assets/26c8a20d-4664-4f77-b2eb-62c87de7b569" />
 
-'''sql
+```sql
 SELECT Professors.last_name, Professors.first_name, Professors.patronymic, Fields.field_name
 FROM Professors
 JOIN Fields ON Fields.professor_id = Professors.professor_id
 ORDER BY Professors.last_name, Professors.first_name;
-'''
+```
 
 ### 19
 Вывести ФИО всех студентов с оценками, освоивших дисциплину «Философия» меньше, чем на 4. Отсортировать по фамилии и имени.
 
 <img width="697" alt="image" src="https://github.com/user-attachments/assets/adb731ef-6811-435b-b4ba-266706ee9c17" />
 
-'''sql
+```sql
 with Field_and_Marks AS(
 SELECT  Field_comprehensions.student_id,field_name, mark
 FROM Fields
@@ -40,14 +40,14 @@ SELECT last_name, first_name, patronymic
 FROM Students
 JOIN Field_and_Marks ON Field_and_Marks.student_id = Students.student_id
 ORDER BY Students.last_name, Students.first_name
-'''
+```
 
 ### 29
 Подсчитать количество всех оценок у студентов чьи номера студенческих билетов лежат в интервале 820000–850000. Вывести фамилию, имя, номер студенческого, оценку и ее количество. Исключить из подсчета незаполненные поля оценок. Отсортировать по номеру студенческого билета.
 
 <img width="718" alt="image" src="https://github.com/user-attachments/assets/a771e73d-0905-42bd-b599-cb7353132c68" />
 
-'''sql
+```sql
 SELECT 
     Students.last_name, 
     Students.first_name, 
@@ -66,7 +66,7 @@ GROUP BY
     Field_comprehensions.mark
 ORDER BY 
     Students.student_id;
-'''
+```
 
 ### 39
 Выведите полные названия структурных подразделений, название групп в него входящих и количество студентов в каждой группе.  Оставьте только группы содержащие в своем названии буквы “В” и “Б” и оканчивающиеся цифрой “1”. Отсортируйте по номеру группы.
@@ -74,7 +74,7 @@ ORDER BY
 
 <img width="703" alt="image" src="https://github.com/user-attachments/assets/4ea10472-9aa8-43d3-87c0-4dc92089b7e3" />
 
-'''sql
+```sql
 WITH students_in_group AS (
     SELECT 
         Students_groups.students_group_number, 
@@ -91,7 +91,7 @@ JOIN students_in_group ON students_in_group.students_group_number = Students_gro
 WHERE Students_groups.students_group_number ~ '.*[ВБ].*1$'
 ORDER BY(Students_groups.students_group_number)
 
-'''
+```
 
 ### 49
 
@@ -99,17 +99,56 @@ ORDER BY(Students_groups.students_group_number)
 
 <img width="918" alt="image" src="https://github.com/user-attachments/assets/5f67442d-21b5-49f2-a659-5b3bc73b478d" />
 
-'''sql
+```sql
 SELECT Structural_units.head_of_the_unit, Structural_units.phone_number,
 		Students.last_name, Students.first_name, Students.email
 FROM Structural_units
 JOIN Students_groups ON Students_groups.structural_unit_id = Structural_units.structural_unit_id
 JOIN Students ON Students_groups.students_group_number = Students.students_group_number
-'''
+```
 
 
 ### 59
 
 Вывести ФИО, оклад и должность всех преподавателей, кроме преподавателей МПСУ. Сортировать по убыванию оклада. Использовать EXCEPT.
+
+<img width="769" alt="image" src="https://github.com/user-attachments/assets/e29c89c0-f7d9-4254-beb4-a49c9503a586" />
+
+```sql
+WITH All_Professors AS (
+    SELECT 
+        Professors.professor_id AS IDS
+    FROM 
+        Professors
+),
+
+MPSU_Professors AS (
+    SELECT 
+        Professors.professor_id AS IDS
+    FROM 
+        Professors
+    JOIN 
+        Employments ON Employments.professor_id = Professors.professor_id
+    JOIN 
+        Structural_units ON Structural_units.structural_unit_id = Employments.structural_unit_id
+    WHERE 
+        Structural_units.full_title = 'МПСУ'
+)
+
+
+SELECT Professors.last_name, Professors.first_name, Professors.patronymic,
+			Professors.salary, Professors.current_position
+FROM Professors
+JOIN 
+    (SELECT IDS FROM All_Professors
+     EXCEPT
+     SELECT IDS FROM MPSU_Professors) AS Filtered_Professors
+ON 
+    Professors.professor_id = Filtered_Professors.IDS
+ORDER BY(Professors.salary)
+
+
+```
+
 
 
