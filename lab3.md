@@ -265,4 +265,70 @@ WHERE
 ## NUM 3
 <img width="1083" alt="image" src="https://github.com/user-attachments/assets/3403fda6-bec4-4ec8-bc12-10111ff88a74" />
 
-### 1
+###  Запрос с INNER JOIN:
+Задача: Вывести фамилию, имя и средний балл студентов, которые изучают дисциплины, преподаваемые в структурном подразделении "ЦД".
+
+<img width="724" alt="image" src="https://github.com/user-attachments/assets/abbd048c-4f67-4bd3-addc-c63ecf15287d" />
+
+``` sql
+
+SELECT 
+    Students.last_name, 
+    Students.first_name, 
+    AVG(Field_comprehensions.mark) AS avg_mark
+FROM 
+    Students
+INNER JOIN 
+    Field_comprehensions ON Students.student_id = Field_comprehensions.student_id
+INNER JOIN 
+    Fields ON Field_comprehensions.field = Fields.field_id
+INNER JOIN 
+    Structural_units ON Fields.structural_unit_id = Structural_units.structural_unit_id
+WHERE 
+    Structural_units.abbreviated_title = 'ЦД'
+GROUP BY 
+    Students.student_id;
+
+```
+
+###  Запрос с LEFT JOIN:
+
+!тут не получилось придумать хороший пример но смысл что только левая окружноть нет примера
+Задача: Вывести фамилию, имя и номер группы всех студентов, название структурного подразделения, к которому относится их группа. Если подразделение не указано, вывести "Не указано".
+
+```sql
+SELECT 
+    Students.last_name, 
+    Students.first_name, 
+    Students_groups.students_group_number, 
+    COALESCE(Structural_units.full_title, 'Не указано') AS unit_title
+FROM 
+    Students
+LEFT JOIN 
+    Students_groups ON Students.students_group_number = Students_groups.students_group_number
+LEFT JOIN 
+    Structural_units ON Students_groups.structural_unit_id = Structural_units.structural_unit_id
+
+
+```
+
+###  Запрос с LEFT UNION:
+Задача: Вывести фамилию, имя и тип (студент или преподаватель) всех людей в университете.
+<img width="517" alt="image" src="https://github.com/user-attachments/assets/072538a1-c5c8-4a0a-ba7c-d38f7069ec1b" />
+```sql
+SELECT 
+    last_name, 
+    first_name, 
+    'Студент' AS person_type
+FROM 
+    Students
+UNION
+SELECT 
+    last_name, 
+    first_name, 
+    'Преподаватель' AS person_type
+FROM 
+    Professors;
+
+
+```
