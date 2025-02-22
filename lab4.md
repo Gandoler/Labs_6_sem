@@ -15,3 +15,33 @@ ORDER BY(field_name)
 ```
 <img width="916" alt="image" src="https://github.com/user-attachments/assets/b7ca075c-c3bc-4e93-bb90-304cf6434df0" />
 
+```sql
+CREATE TABLE Field_Professors (
+    field_id UUID NOT NULL REFERENCES Fields(field_id) ON DELETE CASCADE,
+    professor_id INTEGER NOT NULL REFERENCES Professors(professor_id) ON DELETE CASCADE,
+    PRIMARY KEY (field_id, professor_id)  -- Составной первичный ключ
+);
+
+INSERT INTO Field_Professors (field_id, professor_id)
+SELECT field_id, professor_id
+FROM Fields
+WHERE professor_id IS NOT NULL;
+
+
+ALTER TABLE Fields DROP COLUMN professor_id;
+```
+после операций
+
+```sql
+INSERT INTO Field_Professors (field_id, professor_id)
+VALUES ('f81d63d6-ccd0-4cf0-a13a-340c44b852af', 820001);
+
+SELECT Fields.field_name, Professors.last_name, Professors.first_name
+FROM Professors
+inner JOIN Field_Professors ON Field_Professors.professor_id = Professors.professor_id
+inner JOIN Fields ON Fields.field_id = Field_Professors.field_id
+WHERE Fields.field_id = 'f81d63d6-ccd0-4cf0-a13a-340c44b852af'
+ORDER BY(Field_Professors.field_id)
+
+```
+<img width="709" alt="image" src="https://github.com/user-attachments/assets/70262eba-a878-4fc3-ad24-f9c215fbf0e5" />
