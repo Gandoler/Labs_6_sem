@@ -50,3 +50,16 @@ ORDER BY(Field_Professors.field_id)
 ## num 2
 Отредактируйте базу данных в соответствии с вашим вариантом. 
 Добавьте в таблицу structural_units поле, содержащее номер аудитории подразделения. Сделайте ограничение, позволяющее хранить номер аудитории в формате: ABXX, где A может принимать значения 1,3,4; B – от 1-3. Значение XX может лежать от 00 до 39 
+
+
+``` sql
+ALTER TABLE structural_units
+ADD COLUMN room_number VARCHAR(4);
+
+
+ALTER TABLE structural_units
+ADD CONSTRAINT room_number_format
+CHECK (room_number ~ '^[134][1-3][0-3][0-9]$');
+```
+
+
