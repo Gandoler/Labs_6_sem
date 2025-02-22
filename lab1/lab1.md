@@ -38,6 +38,30 @@ ORDER BY Students.last_name, Students.first_name
 '''
 ### 29
 Подсчитать количество всех оценок у студентов чьи номера студенческих билетов лежат в интервале 820000–850000. Вывести фамилию, имя, номер студенческого, оценку и ее количество. Исключить из подсчета незаполненные поля оценок. Отсортировать по номеру студенческого билета.
+
 <img width="718" alt="image" src="https://github.com/user-attachments/assets/a771e73d-0905-42bd-b599-cb7353132c68" />
+'''sql
+SELECT 
+    Students.last_name, 
+    Students.first_name, 
+    Students.student_id, 
+    Field_comprehensions.mark, 
+    COUNT(Field_comprehensions.mark) AS mark_count
+FROM Students
+JOIN Field_comprehensions ON Students.student_id = Field_comprehensions.student_id
+WHERE 
+    Students.student_id BETWEEN 820000 AND 850000 
+    AND Field_comprehensions.mark IS NOT NULL
+GROUP BY 
+    Students.last_name, 
+    Students.first_name, 
+    Students.student_id, 
+    Field_comprehensions.mark
+ORDER BY 
+    Students.student_id;
+'''
+### 39
+Выведите полные названия структурных подразделений, название групп в него входящих и количество студентов в каждой группе.  Оставьте только группы содержащие в своем названии буквы “В” и “Б” и оканчивающиеся цифрой “1”. Отсортируйте по номеру группы.
+
 
 
