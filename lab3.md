@@ -260,3 +260,9 @@ FROM
 WHERE 
     birthday = (SELECT MAX(birthday) FROM Students);
 ```
+
+
+## NUM 3
+<img width="1083" alt="image" src="https://github.com/user-attachments/assets/3403fda6-bec4-4ec8-bc12-10111ff88a74" />
+
+### 1
