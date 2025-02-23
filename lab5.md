@@ -89,15 +89,6 @@ SET room_number = CONCAT(
 
 <img width="793" alt="image" src="https://github.com/user-attachments/assets/9230c5bf-2da1-4ab0-9750-f083a4d1e833" />
 ### обьяснение запросика
-## Объяснение SQL-запроса для обновления номера аудитории
-
-### Описание задачи
-Необходимо обновить колонку `room_number` в таблице `structural_units`, установив в неё значения, соответствующие формату **ABXX**, где:
-- `A` – может быть `1`, `3` или `4`.
-- `B` – может быть `1`, `2` или `3`.
-- `XX` – двузначное число в диапазоне от `00` до `39`.
-
-### SQL-запрос
 ```sql
 UPDATE structural_units
 SET room_number = CONCAT(
@@ -106,8 +97,6 @@ SET room_number = CONCAT(
     LPAD(LEAST(CHAR_LENGTH(full_title), 39)::VARCHAR, 2, '0')
 );
 ```
-
-### Разбор запроса
 1. **Генерация первой буквы `A`**
    ```sql
    (ARRAY['1', '3', '4'])[FLOOR(RANDOM() * 3) + 1]
