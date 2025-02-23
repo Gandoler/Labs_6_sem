@@ -161,8 +161,7 @@ SELECT * FROM skills;
 # ВОПРОСЫ
 
 
-```markdown
-# Контрольные вопросы
+
 
 1. **Какие ключевые слова возможно использовать внутри оператора INSERT?**
 
@@ -171,7 +170,6 @@ SELECT * FROM skills;
    - `SELECT`: для вставки данных из другой таблицы или запроса.
    - `DEFAULT`: для использования значений по умолчанию в столбцах.
 
-   Пример:
    ```sql
    INSERT INTO table_name (column1, column2)
    VALUES (value1, value2);
@@ -181,7 +179,6 @@ SELECT * FROM skills;
 
    Для обновления нескольких значений можно использовать оператор `UPDATE` с несколькими парами "столбец = значение" в секции `SET`.
 
-   Пример:
    ```sql
    UPDATE table_name
    SET column1 = value1, column2 = value2
@@ -192,7 +189,6 @@ SELECT * FROM skills;
 
    Да, операции объединения, такие как `UNION`, могут использоваться в операторе `INSERT` для вставки данных, полученных из нескольких источников.
 
-   Пример:
    ```sql
    INSERT INTO table_name (column1, column2)
    SELECT column1, column2 FROM another_table
@@ -204,7 +200,6 @@ SELECT * FROM skills;
 
    Да, можно изменить порядок атрибутов, указывая имена столбцов в операторе `INSERT`, что позволяет вставлять данные в любом порядке.
 
-   Пример:
    ```sql
    INSERT INTO table_name (column2, column1)
    VALUES (value2, value1);
@@ -215,7 +210,6 @@ SELECT * FROM skills;
    - `DELETE`: удаляет строки по условию, поддерживает операцию отката (rollback), работает медленно для больших таблиц, может быть использован с условием `WHERE`.
    - `TRUNCATE`: удаляет все строки таблицы, не поддерживает откат (rollback), работает быстрее, но нельзя использовать с условием.
 
-   Пример:
    ```sql
    DELETE FROM table_name WHERE condition;
    ```
