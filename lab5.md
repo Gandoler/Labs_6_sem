@@ -89,6 +89,7 @@ SET room_number = CONCAT(
 
 <img width="793" alt="image" src="https://github.com/user-attachments/assets/9230c5bf-2da1-4ab0-9750-f083a4d1e833" />
 ### обьяснение запросика
+
 ```sql
 UPDATE structural_units
 SET room_number = CONCAT(
@@ -97,6 +98,7 @@ SET room_number = CONCAT(
     LPAD(LEAST(CHAR_LENGTH(full_title), 39)::VARCHAR, 2, '0')
 );
 ```
+
 1. **Генерация первой буквы `A`**
    ```sql
    (ARRAY['1', '3', '4'])[FLOOR(RANDOM() * 3) + 1]
