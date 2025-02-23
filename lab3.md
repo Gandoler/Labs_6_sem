@@ -215,6 +215,41 @@ ORDER BY
 
 Вывести фамилию, имя всех студентов, чей средний балл выше среднего балла в ИТД-21 
 
+#### Вложенный вариант
+<img width="638" alt="image" src="https://github.com/user-attachments/assets/e62f7049-19f6-4699-aca2-7c1b0e8eca23" />
+
+```sql
+
+SELECT 
+    last_name, 
+    first_name
+FROM 
+    Students
+JOIN (
+    SELECT 
+        Students.student_id, 
+        AVG(Field_comprehensions.mark) AS avg_mark
+    FROM 
+        Students
+    JOIN 
+        Field_comprehensions ON Students.student_id = Field_comprehensions.student_id
+    GROUP BY 
+        Students.student_id
+) AS avg_mark_students ON avg_mark_students.student_id = Students.student_id
+WHERE 
+    avg_mark_students.avg_mark > (
+        SELECT AVG(mark) AS avg_mark
+        FROM Field_comprehensions
+        JOIN Students ON Field_comprehensions.student_id = Students.student_id
+        JOIN Students_groups ON Students.students_group_number = Students_groups.students_group_number
+        WHERE Students_groups.students_group_number = 'ИТД-21'
+    );
+
+```
+
+
+
+#### CTE вариант
 <img width="686" alt="image" src="https://github.com/user-attachments/assets/4ede504a-a34e-4cb6-be8f-94981b6bd523" />
 
 ``` sql
