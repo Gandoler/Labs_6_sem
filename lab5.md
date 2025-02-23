@@ -217,4 +217,3 @@ SELECT * FROM skills;
    ```sql
    TRUNCATE TABLE table_name;
    ```
-```
