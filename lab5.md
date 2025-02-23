@@ -1,4 +1,4 @@
-# lab 5
+<img width="847" alt="image" src="https://github.com/user-attachments/assets/fce50176-4359-4ce4-8259-72ec3085c41d" /># lab 5
 
 ## num 1
 Пересчитайте ставки преподавателей в соответствии с средним значением (округлите до целого) ЗЕТ дисциплин, которые он ведет, из расчета, что полная ставка соответствует 6 ЗЕТ. Значение ставки округлите до сотых.
@@ -130,3 +130,20 @@ SET room_number = CONCAT(
 
 
 ## num 3
+
+```sql
+
+SELECT * FROM portfolio;
+
+SELECT * FROM achievements;
+
+SELECT * FROM projects;
+
+SELECT * FROM skills;
+
+```
+<img width="518" alt="image" src="https://github.com/user-attachments/assets/4c2340a2-fdf9-4500-a2db-1c3b8abcd6df" />
+<img width="823" alt="image" src="https://github.com/user-attachments/assets/fbff793d-78a4-4669-a942-db4381282ecd" />
+<img width="956" alt="image" src="https://github.com/user-attachments/assets/205c2653-93fa-42ee-984d-882101e48297" />
+<img width="607" alt="image" src="https://github.com/user-attachments/assets/9b97e053-a47b-4838-924d-4582d49c929c" />
+
