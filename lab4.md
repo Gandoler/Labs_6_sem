@@ -130,7 +130,6 @@ VALUES ('Подразделение 2', 'П2', 'Петров П.П.', '56-78', '
 ### SQL-код для создания новых таблиц
 
 ```sql
--- Таблица Portfolio
 CREATE TABLE Portfolio (
     portfolio_id SERIAL PRIMARY KEY,
     student_id INTEGER NOT NULL REFERENCES Students(student_id) ON DELETE CASCADE,
@@ -138,7 +137,6 @@ CREATE TABLE Portfolio (
     last_update_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
--- Таблица Achievements
 CREATE TABLE Achievements (
     achievement_id SERIAL PRIMARY KEY,
     portfolio_id INTEGER NOT NULL REFERENCES Portfolio(portfolio_id) ON DELETE CASCADE,
@@ -147,7 +145,6 @@ CREATE TABLE Achievements (
     date DATE NOT NULL
 );
 
--- Таблица Projects
 CREATE TABLE Projects (
     project_id SERIAL PRIMARY KEY,
     portfolio_id INTEGER NOT NULL REFERENCES Portfolio(portfolio_id) ON DELETE CASCADE,
@@ -157,7 +154,6 @@ CREATE TABLE Projects (
     end_date DATE
 );
 
--- Таблица Skills
 CREATE TABLE Skills (
     skill_id SERIAL PRIMARY KEY,
     portfolio_id INTEGER NOT NULL REFERENCES Portfolio(portfolio_id) ON DELETE CASCADE,
