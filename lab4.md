@@ -80,3 +80,90 @@ VALUES ('Подразделение 2', 'П2', 'Петров П.П.', '56-78', '
 
 ## num 3
 В соответствии с вариантом доработайте логическую модель базы данных. При доработке БД должно быть добавлено не менее трех новых таблиц. Постройте схему новой базы данных в редакторе pgmodeler или Erwin. Экспортируйте её в созданную базу данных. 
+
+1. **Portfolio** — основная таблица для хранения информации о портфолио студента.
+2. **Achievements** — таблица для хранения достижений студента.
+3. **Projects** — таблица для хранения проектов студента.
+4. **Skills** — таблица для хранения навыков студента.
+
+### Новые таблицы
+
+#### 1. Таблица `Portfolio`
+
+| Поле               | Тип данных         | Описание                                      |
+|--------------------|--------------------|-----------------------------------------------|
+| `portfolio_id`     | SERIAL PRIMARY KEY | Уникальный идентификатор портфолио.          |
+| `student_id`       | INTEGER            | Связь с таблицей `Students` (ON DELETE CASCADE). |
+| `creation_date`    | DATE               | Дата создания портфолио (по умолчанию CURRENT_DATE). |
+| `last_update_date` | DATE               | Дата последнего обновления (по умолчанию CURRENT_DATE). |
+
+#### 2. Таблица `Achievements`
+
+| Поле               | Тип данных         | Описание                                      |
+|--------------------|--------------------|-----------------------------------------------|
+| `achievement_id`   | SERIAL PRIMARY KEY | Уникальный идентификатор достижения.         |
+| `portfolio_id`     | INTEGER            | Связь с таблицей `Portfolio` (ON DELETE CASCADE). |
+| `achievement_name` | VARCHAR(100)       | Название достижения.                         |
+| `description`      | TEXT               | Описание достижения.                         |
+| `date`             | DATE               | Дата достижения.                             |
+
+#### 3. Таблица `Projects`
+
+| Поле               | Тип данных         | Описание                                      |
+|--------------------|--------------------|-----------------------------------------------|
+| `project_id`       | SERIAL PRIMARY KEY | Уникальный идентификатор проекта.            |
+| `portfolio_id`     | INTEGER            | Связь с таблицей `Portfolio` (ON DELETE CASCADE). |
+| `project_name`     | VARCHAR(100)       | Название проекта.                            |
+| `description`      | TEXT               | Описание проекта.                            |
+| `start_date`       | DATE               | Дата начала проекта.                         |
+| `end_date`         | DATE               | Дата завершения проекта (может быть NULL).   |
+
+#### 4. Таблица `Skills`
+
+| Поле               | Тип данных         | Описание                                      |
+|--------------------|--------------------|-----------------------------------------------|
+| `skill_id`         | SERIAL PRIMARY KEY | Уникальный идентификатор навыка.             |
+| `portfolio_id`     | INTEGER            | Связь с таблицей `Portfolio` (ON DELETE CASCADE). |
+| `skill_name`       | VARCHAR(100)       | Название навыка.                             |
+| `proficiency_level`| VARCHAR(20)        | Уровень владения навыком (CHECK: 'Начальный', 'Средний', 'Продвинутый', 'Эксперт'). |
+
+### SQL-код для создания новых таблиц
+
+```sql
+-- Таблица Portfolio
+CREATE TABLE Portfolio (
+    portfolio_id SERIAL PRIMARY KEY,
+    student_id INTEGER NOT NULL REFERENCES Students(student_id) ON DELETE CASCADE,
+    creation_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    last_update_date DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+-- Таблица Achievements
+CREATE TABLE Achievements (
+    achievement_id SERIAL PRIMARY KEY,
+    portfolio_id INTEGER NOT NULL REFERENCES Portfolio(portfolio_id) ON DELETE CASCADE,
+    achievement_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    date DATE NOT NULL
+);
+
+-- Таблица Projects
+CREATE TABLE Projects (
+    project_id SERIAL PRIMARY KEY,
+    portfolio_id INTEGER NOT NULL REFERENCES Portfolio(portfolio_id) ON DELETE CASCADE,
+    project_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    start_date DATE NOT NULL,
+    end_date DATE
+);
+
+-- Таблица Skills
+CREATE TABLE Skills (
+    skill_id SERIAL PRIMARY KEY,
+    portfolio_id INTEGER NOT NULL REFERENCES Portfolio(portfolio_id) ON DELETE CASCADE,
+    skill_name VARCHAR(100) NOT NULL,
+    proficiency_level VARCHAR(20) CHECK (proficiency_level IN ('Начальный', 'Средний', 'Продвинутый', 'Эксперт'))
+);
+```
+
+
