@@ -1,5 +1,3 @@
-<img width="1029" alt="image" src="https://github.com/user-attachments/assets/98dc44d6-c5d8-4603-811f-94a013e493e2" />![image](https://github.com/user-attachments/assets/e1781bb9-e5e1-4e3b-916c-e4423e9f7a66)<img width="753" alt="image" src="https://github.com/user-attachments/assets/15e83d50-a0b4-43b0-93f5-1535b018045c" /># lab 7 
-
 ## num 1 
 Исследование производительности системы
 Создайте таблицу, содержащую значения посещаемости студентом института. Таблица содержит номер студенческого билета, время его входа, выхода и сгенерированное случайное кодовое число при выходе из вуза.  
