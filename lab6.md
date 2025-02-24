@@ -106,6 +106,42 @@ WHERE field_comprehensions.student_id = '847516';
 
 
 
+
+
+#### скрипт
+
+```sql
+DO $$
+DECLARE
+    zodiac_sign VARCHAR(20);
+    birthday DATE := '1990-03-25'; 
+BEGIN
+    zodiac_sign := CASE 
+        WHEN (EXTRACT(MONTH FROM birthday) = 1 AND EXTRACT(DAY FROM birthday) >= 20) OR (EXTRACT(MONTH FROM birthday) = 2 AND EXTRACT(DAY FROM birthday) <= 18) THEN 'Водолей'
+        WHEN (EXTRACT(MONTH FROM birthday) = 2 AND EXTRACT(DAY FROM birthday) >= 19) OR (EXTRACT(MONTH FROM birthday) = 3 AND EXTRACT(DAY FROM birthday) <= 20) THEN 'Рыбы'
+        WHEN (EXTRACT(MONTH FROM birthday) = 3 AND EXTRACT(DAY FROM birthday) >= 21) OR (EXTRACT(MONTH FROM birthday) = 4 AND EXTRACT(DAY FROM birthday) <= 19) THEN 'Овен'
+        WHEN (EXTRACT(MONTH FROM birthday) = 4 AND EXTRACT(DAY FROM birthday) >= 20) OR (EXTRACT(MONTH FROM birthday) = 5 AND EXTRACT(DAY FROM birthday) <= 20) THEN 'Телец'
+        WHEN (EXTRACT(MONTH FROM birthday) = 5 AND EXTRACT(DAY FROM birthday) >= 21) OR (EXTRACT(MONTH FROM birthday) = 6 AND EXTRACT(DAY FROM birthday) <= 20) THEN 'Близнецы'
+        WHEN (EXTRACT(MONTH FROM birthday) = 6 AND EXTRACT(DAY FROM birthday) >= 21) OR (EXTRACT(MONTH FROM birthday) = 7 AND EXTRACT(DAY FROM birthday) <= 22) THEN 'Рак'
+        WHEN (EXTRACT(MONTH FROM birthday) = 7 AND EXTRACT(DAY FROM birthday) >= 23) OR (EXTRACT(MONTH FROM birthday) = 8 AND EXTRACT(DAY FROM birthday) <= 22) THEN 'Лев'
+        WHEN (EXTRACT(MONTH FROM birthday) = 8 AND EXTRACT(DAY FROM birthday) >= 23) OR (EXTRACT(MONTH FROM birthday) = 9 AND EXTRACT(DAY FROM birthday) <= 22) THEN 'Дева'
+        WHEN (EXTRACT(MONTH FROM birthday) = 9 AND EXTRACT(DAY FROM birthday) >= 23) OR (EXTRACT(MONTH FROM birthday) = 10 AND EXTRACT(DAY FROM birthday) <= 22) THEN 'Весы'
+        WHEN (EXTRACT(MONTH FROM birthday) = 10 AND EXTRACT(DAY FROM birthday) >= 23) OR (EXTRACT(MONTH FROM birthday) = 11 AND EXTRACT(DAY FROM birthday) <= 21) THEN 'Скорпион'
+        WHEN (EXTRACT(MONTH FROM birthday) = 11 AND EXTRACT(DAY FROM birthday) >= 22) OR (EXTRACT(MONTH FROM birthday) = 12 AND EXTRACT(DAY FROM birthday) <= 21) THEN 'Стрелец'
+        WHEN (EXTRACT(MONTH FROM birthday) = 12 AND EXTRACT(DAY FROM birthday) >= 22) OR (EXTRACT(MONTH FROM birthday) = 1 AND EXTRACT(DAY FROM birthday) <= 19) THEN 'Козерог'
+    END;
+
+ 
+    RAISE NOTICE 'Zodiac sign for birthday %: %', birthday, zodiac_sign;
+END;
+$$;
+
+```
+<img width="1400" alt="image" src="https://github.com/user-attachments/assets/ed14c355-f1af-4fda-80ac-1267d15dfb02" />
+
+
+#### функция
+
 ```sql
 
 CREATE OR REPLACE FUNCTION ZODIAC_3_0(birthday date)
