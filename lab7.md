@@ -336,7 +336,12 @@ COMMIT	BEGIN ISOLATION LEVEL …
 <img width="1056" alt="image" src="https://github.com/user-attachments/assets/b147f095-2cbb-498f-af58-1be10b259f1d" />
 
 
-
+| Уровень изоляции     | Ошибочные значения до фиксации | Ошибочные значения после фиксации |
+|----------------------|--------------------------------|----------------------------------|
+| **Read Uncommitted** | ✅ Да                           | ✅ Да                           |
+| **Read Committed**   | ❌ Нет                          | ✅ Да                           |
+| **Repeatable Read**  | ❌ Нет                          | ❌ Нет                          |
+| **Serializable**     | ❌ Нет                          | ❌ Нет                          |
 
 
 
