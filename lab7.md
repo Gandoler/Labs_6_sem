@@ -1,4 +1,4 @@
-<img width="753" alt="image" src="https://github.com/user-attachments/assets/15e83d50-a0b4-43b0-93f5-1535b018045c" /># lab 7 
+<img width="1029" alt="image" src="https://github.com/user-attachments/assets/98dc44d6-c5d8-4603-811f-94a013e493e2" />![image](https://github.com/user-attachments/assets/e1781bb9-e5e1-4e3b-916c-e4423e9f7a66)<img width="753" alt="image" src="https://github.com/user-attachments/assets/15e83d50-a0b4-43b0-93f5-1535b018045c" /># lab 7 
 
 ## num 1 
 Исследование производительности системы
@@ -221,3 +221,74 @@ CREATE INDEX idx_person_id ON attendance(person_id);
    - Для операции `SELECT` без условий, время выполнения практически не изменилось после добавления индекса. Это связано с тем, что индекс на атрибут `person_id` не влияет на выборку всех строк таблицы.
    - Для операции `SELECT + WHERE`, время выполнения значительно уменьшилось после добавления индекса. Индекс позволяет быстро находить строки, соответствующие заданному значению `person_id`, что существенно ускоряет выполнение запроса.
 
+### 1.3
+
+Составьте запрос к таблице attendance, выводящий все строки в отсортированном порядке, в которых столбец generated_code заканчивается символом ‘a’. Проанализируйте полученный запрос и объясните результат. Используется ли в данном случае индекс? 
+
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM attendance 
+WHERE generated_code LIKE '%a'
+ORDER BY generated_code;
+```
+<img width="957" alt="image" src="https://github.com/user-attachments/assets/207cbcf2-bd6f-413c-844a-3f5fcd6b525b" />
+
+Запрос не использует индекс, потому что он использует условие `LIKE '%a'`, которое не может эффективно работать с индексами. В PostgreSQL индексы оптимизированы для запросов, использующих префиксный поиск (например, `LIKE 'prefix%'`), но не для поиска в конце строки (например, `LIKE '%a'`). Когда база данных выполняет поиск по окончанию строки, как в данном случае, она не может использовать индекс эффективно, и вместо этого проводит полный скан таблицы, чтобы найти все строки, соответствующие этому условию.
+
+
+## num 2
+
+во первых создадим такого студента 
+
+```sql
+INSERT INTO students (student_id, last_name, first_name, patronymic, students_group_number, birthday, email)
+VALUES (13, 'Шариков', 'Полиграф', 'Полиграфович', 'ИВТ-42', '2000-01-01', 'sharikov@gmail.com');
+
+
+INSERT INTO student_ids (student_id, issue_date, expiration_date)
+VALUES (13, CURRENT_DATE, CURRENT_DATE + INTERVAL '4 years');
+
+
+INSERT INTO fields (field_id, field_name, structural_unit_id, zet, semester)
+VALUES ('550e8400-e29b-41d4-a716-446655440000', 'Операционные системы 7л', 1, 5, 1);
+
+
+INSERT INTO fields (field_id, field_name, structural_unit_id, zet, semester)
+VALUES ('550e8400-e29b-41d4-a716-446655440001', 'Базы данных 7л', 1, 5, 1);
+
+
+INSERT INTO field_comprehensions (student_id, field, mark)
+VALUES (13, '550e8400-e29b-41d4-a716-446655440000', 4);
+
+INSERT INTO field_comprehensions (student_id, field, mark)
+VALUES (13, '550e8400-e29b-41d4-a716-446655440001', 4);
+```
+
+1. **Работа с транзакциями**
+
+В рамках транзакции измените значение оценки студента по Операционным системам и проверьте значение в первом и втором окне. Зафиксируйте изменения и вновь проверьте значения. Аналогично внесите новую оценку по Базам данных и проверьте изменения. 
+
+преподователь
+
+```sql
+UPDATE field_comprehensions SET mark = 5 WHERE student_id = 13 AND field = (SELECT field_id FROM fields WHERE field_name = 'Операционные системы 7л');
+INSERT INTO field_comprehensions (student_id, field, mark) VALUES (13, (SELECT field_id FROM fields WHERE field_name = 'Базы данных 7л'), 5);
+COMMIT;
+```
+методист 
+
+```sql
+SELECT * FROM field_comprehensions WHERE student_id = 42;
+```
+тут баг с бесконечной прокруткой
+
+<img width="1029" alt="image" src="https://github.com/user-attachments/assets/5bf70c21-3854-44fb-8ad9-2dfcfbfda2d3" />
+
+а тут уже компит случился и все правильно
+
+<img width="1158" alt="image" src="https://github.com/user-attachments/assets/7a5de0e6-84a6-454b-93a3-8b21233c3ed2" />
+
+
+2. **Отмена изменений транзакций**
+   
+Удалите добавленное значение и верните исправленную оценку в прежнее состояние. Повторите аналогичные действия, только по окончании внесения изменений преподавателем откатите их с помощью команды ROLLBACK.  Какое значение увидела методист?
