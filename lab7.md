@@ -320,6 +320,7 @@ COMMIT	BEGIN ISOLATION LEVEL …
 
  **Read Uncommitted** 
 
+<img width="1171" alt="image" src="https://github.com/user-attachments/assets/c179f2c9-c903-4ef1-b385-cf963df1a5c9" />
 
 **Read Committed**  
 
@@ -328,6 +329,30 @@ COMMIT	BEGIN ISOLATION LEVEL …
 <img width="1053" alt="image" src="https://github.com/user-attachments/assets/78b2fbfd-2cb1-40bd-a3c5-1d2b88389dd6" />
 
 <img width="1105" alt="image" src="https://github.com/user-attachments/assets/10712b35-1e95-428b-9352-691cd47aa4df" />
+
+ **Repeatable Read** 
+ 
+ <img width="1057" alt="image" src="https://github.com/user-attachments/assets/2290ed8d-b471-4215-8e89-3717c2901e11" />
+
+**Serializable** 
+
+<img width="1052" alt="image" src="https://github.com/user-attachments/assets/8c3724ff-787b-474b-b9c7-e13a5dc0d4f7" />
+
+| Уровень изоляции     | Защита от аномалий                                       |
+|----------------------|-------------------------------------------------|
+| **Read Uncommitted** |  |
+| **Read Committed**   |  |
+| **Repeatable Read**  |  |
+| **Serializable**     |  |
+
+
+| Уровень изоляции     | Защита от аномалий                                       |
+|----------------------|-------------------------------------------------|
+| **Read Uncommitted** | ❌ Грязное чтение, неповторяющееся чтение, фантомные записи |
+| **Read Committed**   | ✅ Нет грязного чтения, ❌ но возможны неповторяющееся чтение и фантомные записи |
+| **Repeatable Read**  | ✅ Нет грязного и неповторяющегося чтения, ❌ но возможны фантомные записи |
+| **Serializable**     | ✅ Полностью изолированные транзакции |
+
 
 
 | Уровень изоляции     | Защита от аномалий                                       | Производительность          |
