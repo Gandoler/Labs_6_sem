@@ -38,10 +38,10 @@ FROM field_comprehensions
 WHERE field_comprehensions.student_id = '847516'; 
 
 ```
+<img width="580" alt="image" src="https://github.com/user-attachments/assets/d27b7e57-ca9e-4439-9e83-add52797a921" />
 
 
 ### Сравнение времени выполнения в консоле
 
 
 
-<img width="580" alt="image" src="https://github.com/user-attachments/assets/d27b7e57-ca9e-4439-9e83-add52797a921" />
