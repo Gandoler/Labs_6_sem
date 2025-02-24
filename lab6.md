@@ -43,5 +43,11 @@ WHERE field_comprehensions.student_id = '847516';
 
 ### Сравнение времени выполнения в консоле
 
+#### Функция
 
+<img width="318" alt="image" src="https://github.com/user-attachments/assets/3cc10083-64c6-477d-869c-012891adc6b0" />
+
+####  обычный запрос
+
+<img width="469" alt="image" src="https://github.com/user-attachments/assets/47fcb973-7cbb-444f-af26-4be541501f88" />
 
