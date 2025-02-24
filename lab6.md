@@ -22,6 +22,9 @@ BEGIN
 END; 
 $$;
 
+
+
+SELECT avg_mark(847516)
 ```
 
 <img width="334" alt="image" src="https://github.com/user-attachments/assets/476cb388-66c4-43b9-b255-8599bfacc4a5" />
@@ -35,5 +38,10 @@ FROM field_comprehensions
 WHERE field_comprehensions.student_id = '847516'; 
 
 ```
+
+
+### Сравнение времени выполнения в консоле
+
+
 
 <img width="580" alt="image" src="https://github.com/user-attachments/assets/d27b7e57-ca9e-4439-9e83-add52797a921" />
