@@ -320,30 +320,24 @@ COMMIT	BEGIN ISOLATION LEVEL …
 
  **Read Uncommitted** 
 
-<img width="1171" alt="image" src="https://github.com/user-attachments/assets/c179f2c9-c903-4ef1-b385-cf963df1a5c9" />
+<img width="1056" alt="image" src="https://github.com/user-attachments/assets/abb5ac93-79a0-4570-b999-5cb4abdcd3e1" />
 
 **Read Committed**  
 
-<img width="1049" alt="image" src="https://github.com/user-attachments/assets/c9c89d04-8688-4ae8-945e-599586c97f11" />
-
-<img width="1053" alt="image" src="https://github.com/user-attachments/assets/78b2fbfd-2cb1-40bd-a3c5-1d2b88389dd6" />
-
-<img width="1105" alt="image" src="https://github.com/user-attachments/assets/10712b35-1e95-428b-9352-691cd47aa4df" />
+<img width="1058" alt="image" src="https://github.com/user-attachments/assets/4d317ce4-445a-45b4-8683-031312fa14b7" />
 
  **Repeatable Read** 
  
- <img width="1057" alt="image" src="https://github.com/user-attachments/assets/2290ed8d-b471-4215-8e89-3717c2901e11" />
+<img width="1068" alt="image" src="https://github.com/user-attachments/assets/92f89781-936f-481b-ae1d-d77b7777f24a" />
+
 
 **Serializable** 
 
-<img width="1052" alt="image" src="https://github.com/user-attachments/assets/8c3724ff-787b-474b-b9c7-e13a5dc0d4f7" />
+<img width="1056" alt="image" src="https://github.com/user-attachments/assets/b147f095-2cbb-498f-af58-1be10b259f1d" />
 
-| Уровень изоляции     | Защита от аномалий                                       |
-|----------------------|-------------------------------------------------|
-| **Read Uncommitted** |  |
-| **Read Committed**   |  |
-| **Repeatable Read**  |  |
-| **Serializable**     |  |
+
+
+
 
 
 | Уровень изоляции     | Защита от аномалий                                       |
@@ -355,9 +349,3 @@ COMMIT	BEGIN ISOLATION LEVEL …
 
 
 
-| Уровень изоляции     | Защита от аномалий                                       | Производительность          |
-|----------------------|-------------------------------------------------|-----------------------------|
-| **Read Uncommitted** | ❌ Грязное чтение, неповторяющееся чтение, фантомные записи | 🔥 Быстро, но небезопасно  |
-| **Read Committed**   | ✅ Нет грязного чтения, ❌ но возможны неповторяющееся чтение и фантомные записи | ⚖️ Баланс между безопасностью и скоростью |
-| **Repeatable Read**  | ✅ Нет грязного и неповторяющегося чтения, ❌ но возможны фантомные записи | ⏳ Чуть медленнее, но стабильнее |
-| **Serializable**     | ✅ Полностью изолированные транзакции | 🐢 Медленно, но безопасно |
