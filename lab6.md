@@ -26,6 +26,29 @@ $$;
 SELECT avg_mark(847516)
 ```
 
+### скрипт
+
+
+```sql
+DO $$
+DECLARE
+    avg_grade NUMERIC(5,2);
+BEGIN
+    SELECT AVG(field_comprehensions.mark) 
+    INTO avg_grade
+    FROM field_comprehensions
+    WHERE field_comprehensions.student_id = 847516;
+
+    -- Выводим результат
+    RAISE NOTICE 'Average grade for student 847516: %', avg_grade;
+END;
+$$;
+
+
+
+```
+
+
 <img width="334" alt="image" src="https://github.com/user-attachments/assets/476cb388-66c4-43b9-b255-8599bfacc4a5" />
 
 ### Простой запрос:
