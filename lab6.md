@@ -195,15 +195,6 @@ FROM students;
 Создайте процедуру продления студенческих билетов у определенной группы на 1 год. Входной параметр - номер группы
 
 ```sql
-
-SELECT student_ids.student_id, expiration_date, students.students_group_number
-FROM student_ids
-JOIN students ON students.student_id =student_ids. student_id
-
-CALL extend_student_ids('ИВТ-11');
-```
-
-```sql
 CREATE OR REPLACE PROCEDURE extend_student_ids(group_number VARCHAR)
 LANGUAGE plpgsql
 AS $$
@@ -213,6 +204,72 @@ BEGIN
     WHERE student_id IN (SELECT student_id FROM students WHERE students_group_number = extend_student_ids.group_number);
 END;
 $$ ;
-
 ```
+
+```sql
+SELECT student_ids.student_id, expiration_date, students.students_group_number
+FROM student_ids
+JOIN students ON students.student_id =student_ids. student_id
+
+CALL extend_student_ids('ИВТ-11');
+```
+
+<img width="728" alt="image" src="https://github.com/user-attachments/assets/b611b0a5-dc14-47c8-8240-0e8a5e3bf1a0" />
+
+<img width="718" alt="image" src="https://github.com/user-attachments/assets/154c9abf-62d7-4403-8927-ad8dd7ec554b" />
+
+
+### num 39
+
+Создайте функцию, которая считает количество преподавателей, в структурном подразделении с номером N. N вводится в качестве параметра.
+
+```sql
+CREATE OR REPLACE FUNCTION count_professors_in_unit(unit_id INT) 
+RETURNS INT 
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    professor_count INT;
+BEGIN
+    SELECT COUNT(*) INTO professor_count
+    FROM employments
+    WHERE structural_unit_id = unit_id;
+    
+    RETURN professor_count;
+END;
+$$ ;
+```
+
+```sql
+SELECT count_professors_in_unit(1) AS professor_count;
+```
+<img width="527" alt="image" src="https://github.com/user-attachments/assets/08c004db-8948-4c19-b98d-52bc4a916610" />
+
+
+### num 49
+
+Создайте функцию, выводящую всех преподавателей, преподающих в определенном структурном подразделении
+
+
+```sql
+CREATE OR REPLACE FUNCTION get_professors_in_unit(unit_id INT) 
+RETURNS TABLE (professor_id INT, last_name VARCHAR, first_name VARCHAR)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT p.professor_id, p.last_name, p.first_name
+    FROM professors p
+    JOIN employments e ON p.professor_id = e.professor_id
+    WHERE e.structural_unit_id = unit_id;
+END;
+$$;
+```
+
+```sql
+SELECT * FROM get_professors_in_unit(1);
+```
+
+<img width="388" alt="image" src="https://github.com/user-attachments/assets/83a5644f-553e-46dd-aba4-113b36bfb08b" />
+
 
