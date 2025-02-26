@@ -383,4 +383,76 @@ WHERE student_id = 847516 AND field = 'a3043707-440b-4bc4-bd1c-defdfe87f745';
 
 <img width="1054" alt="image" src="https://github.com/user-attachments/assets/83ce9881-fbb5-45c0-a263-6266475bfdf4" />
 
+<img width="1126" alt="image" src="https://github.com/user-attachments/assets/2cb816d8-dac3-490f-966e-939ccf84fa3d" />
 
+<img width="843" alt="image" src="https://github.com/user-attachments/assets/380a495d-f931-488a-a5c2-74dc28db432f" />
+
+
+## num 3
+
+Для добавленной в 4-й лабораторной работе таблицы создайте любой триггер. 
+
+ создам триггер, который будет автоматически обновлять поле last_update_date в таблице portfolio при добавлении или изменении записей в связанных таблицах (achievements, projects, skills).
+
+ ```sql
+CREATE OR REPLACE FUNCTION update_portfolio_last_update_date()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Обновляем поле last_update_date в таблице portfolio
+    UPDATE portfolio
+    SET last_update_date = CURRENT_DATE
+    WHERE portfolio_id = (
+        CASE
+            WHEN TG_TABLE_NAME = 'achievements' THEN NEW.portfolio_id
+            WHEN TG_TABLE_NAME = 'projects' THEN NEW.portfolio_id
+            WHEN TG_TABLE_NAME = 'skills' THEN NEW.portfolio_id
+        END
+    );
+
+    RETURN NEW;
+END;
+$$;
+
+```
+
+Для таблицы achievements:
+
+```sql
+CREATE TRIGGER update_portfolio_after_achievements_change
+AFTER INSERT OR UPDATE OR DELETE ON achievements
+FOR EACH ROW
+EXECUTE FUNCTION update_portfolio_last_update_date();
+```
+
+Для таблицы projects:
+
+```sql
+CREATE TRIGGER update_portfolio_after_projects_change
+AFTER INSERT OR UPDATE OR DELETE ON projects
+FOR EACH ROW
+EXECUTE FUNCTION update_portfolio_last_update_date();
+```
+
+Для таблицы skills:
+```sql
+CREATE TRIGGER update_portfolio_after_skills_change
+AFTER INSERT OR UPDATE OR DELETE ON skills
+FOR EACH ROW
+EXECUTE FUNCTION update_portfolio_last_update_date();
+```
+
+
+```sql
+INSERT INTO achievements (portfolio_id, achievement_name, description, date)
+VALUES (13, 'Победа в олимпиаде', '1 место по математике', '2023-10-01');
+
+UPDATE projects
+SET project_name = 'Новый проект'
+WHERE project_id = 13;
+
+```
+
+
+<img width="546" alt="image" src="https://github.com/user-attachments/assets/8eca0402-b4f5-4955-a156-f5f3c940598f" />
