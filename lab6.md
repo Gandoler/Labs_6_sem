@@ -185,101 +185,65 @@ FROM students;
 
 ### num 19
 
-Напишите скрипт имитирующий шахматный турнир. Выберите случайным образом 10 студентов.  Каждый играет с каждым по одному разу. Результат игры между двумя участниками выбирается рандомно из победы (победивший получает 2 очка, проигравший 0) и ничьи (каждому добавляется по одному баллу). После проведения первого тура отсеиваются 2 участника набравшие наименьшее количество очков. Проводится 2 тур между оставшимися 8 студентами. И так продолжать до тех пор, пока не останутся два победителя. Вывести результаты каждой игры каждого тура (фамилии участников и результат игры) и также для каждого тура итоговые таблицы всех участников с суммой полученных баллов в порядке убывания очков.
+Напишите скрипт, генерирующий случайное местоположение каждого студента на карте (его координаты в градусах).  Определите материк, соответствующий этим координатам. Считайте, попаданием на материк, если координаты лежат в пределах:
+Европа – между 1° с.ш. и 77° с.ш.  и между 9° з.д. и 67° в.д. 
+Африка – между 37° с.ш. и 34° ю.ш.  и между 13° з.д. и 51° в.д. 
+Австралия – между 10° ю.ш. и 39° ю.ш.  и между 113° в.д. и 153° в.д. 
+Северная Америка – между 7° с.ш. и 71° с.ш.  и между 55° з.д. и 168° з.д. 
+Южная Америка – между 12° с.ш. и 53° ю.ш.  и между 34° з.д. и 81° з.д. 
+Антарктида– ниже 63° ю.ш.  
 
 ```sql
-CREATE OR REPLACE FUNCTION chess_tournament() 
-RETURNS TABLE (round INT, player1 VARCHAR, player2 VARCHAR, result VARCHAR, points1 INT, points2 INT)
-LANGUAGE plpgsql
- AS $$
-DECLARE
-    participants INT[];
-    round INT := 1;
-    i INT;
-    j INT;
-    result INT;
-    points INT[];
+BEGIN;
+
+-- Создание таблицы для хранения местоположения студентов
+CREATE TABLE IF NOT EXISTS public.student_locations (
+    student_id INTEGER PRIMARY KEY REFERENCES public.students(student_id),
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    continent VARCHAR(20) NOT NULL
+);
+
+-- Функция для определения материка по координатам
+CREATE OR REPLACE FUNCTION get_continent(lat DOUBLE PRECISION, lon DOUBLE PRECISION) RETURNS VARCHAR AS $$
 BEGIN
-    -- Выбираем 10 случайных студентов
-    participants := ARRAY(SELECT student_id FROM students ORDER BY random() LIMIT 10);
-    points := ARRAY_FILL(0, ARRAY[10]);
-
-    -- Основной цикл турнира
-    WHILE array_length(participants, 1) > 2 LOOP
-        -- Игры в текущем туре
-        FOR i IN 1..array_length(participants, 1) LOOP
-            FOR j IN i+1..array_length(participants, 1) LOOP
-                result := (random() * 2)::INT;  -- 0: ничья, 1: победа первого, 2: победа второго
-                IF result = 0 THEN
-                    points[i] := points[i] + 1;
-                    points[j] := points[j] + 1;
-                    RETURN QUERY SELECT round, 
-                                      (SELECT last_name FROM students WHERE student_id = participants[i]), 
-                                      (SELECT last_name FROM students WHERE student_id = participants[j]), 
-                                      'Draw', points[i], points[j];
-                ELSIF result = 1 THEN
-                    points[i] := points[i] + 2;
-                    RETURN QUERY SELECT round, 
-                                      (SELECT last_name FROM students WHERE student_id = participants[i]), 
-                                      (SELECT last_name FROM students WHERE student_id = participants[j]), 
-                                      'Win', points[i], points[j];
-                ELSE
-                    points[j] := points[j] + 2;
-                    RETURN QUERY SELECT round, 
-                                      (SELECT last_name FROM students WHERE student_id = participants[i]), 
-                                      (SELECT last_name FROM students WHERE student_id = participants[j]), 
-                                      'Win', points[i], points[j];
-                END IF;
-            END LOOP;
-        END LOOP;
-
-        -- Отсеиваем двух участников с наименьшим количеством очков
-        participants := ARRAY(SELECT participants[i] 
-                              FROM unnest(participants) WITH ORDINALITY AS p(participant, idx)
-                              ORDER BY points[idx] DESC 
-                              LIMIT array_length(participants, 1) - 2);
-        points := ARRAY(SELECT points[i] 
-                        FROM unnest(points) WITH ORDINALITY AS p(point, idx)
-                        ORDER BY point DESC 
-                        LIMIT array_length(points, 1) - 2);
-
-        round := round + 1;
-    END LOOP;
-
-    -- Финальный раунд
-    FOR i IN 1..array_length(participants, 1) LOOP
-        FOR j IN i+1..array_length(participants, 1) LOOP
-            result := (random() * 2)::INT;
-            IF result = 0 THEN
-                points[i] := points[i] + 1;
-                points[j] := points[j] + 1;
-                RETURN QUERY SELECT round, 
-                                  (SELECT last_name FROM students WHERE student_id = participants[i]), 
-                                  (SELECT last_name FROM students WHERE student_id = participants[j]), 
-                                  'Draw', points[i], points[j];
-            ELSIF result = 1 THEN
-                points[i] := points[i] + 2;
-                RETURN QUERY SELECT round, 
-                                  (SELECT last_name FROM students WHERE student_id = participants[i]), 
-                                  (SELECT last_name FROM students WHERE student_id = participants[j]), 
-                                  'Win', points[i], points[j];
-            ELSE
-                points[j] := points[j] + 2;
-                RETURN QUERY SELECT round, 
-                                  (SELECT last_name FROM students WHERE student_id = participants[i]), 
-                                  (SELECT last_name FROM students WHERE student_id = participants[j]), 
-                                  'Win', points[i], points[j];
-            END IF;
-        END LOOP;
-    END LOOP;
+    IF lat BETWEEN 1 AND 77 AND lon BETWEEN -9 AND 67 THEN
+        RETURN 'Europe';
+    ELSIF lat BETWEEN -34 AND 37 AND lon BETWEEN -13 AND 51 THEN
+        RETURN 'Africa';
+    ELSIF lat BETWEEN -39 AND -10 AND lon BETWEEN 113 AND 153 THEN
+        RETURN 'Australia';
+    ELSIF lat BETWEEN 7 AND 71 AND lon BETWEEN -168 AND -55 THEN
+        RETURN 'North America';
+    ELSIF lat BETWEEN -53 AND 12 AND lon BETWEEN -81 AND -34 THEN
+        RETURN 'South America';
+    ELSIF lat < -63 THEN
+        RETURN 'Antarctica';
+    ELSE
+        RETURN 'Ocean';
+    END IF;
 END;
-$$ ;
+$$ LANGUAGE plpgsql;
+
+-- Заполнение таблицы случайными координатами
+INSERT INTO public.student_locations (student_id, latitude, longitude, continent)
+SELECT 
+    student_id,
+    ROUND((RANDOM() * 180 - 90)::NUMERIC, 6)::DOUBLE PRECISION AS latitude,
+    ROUND((RANDOM() * 360 - 180)::NUMERIC, 6)::DOUBLE PRECISION AS longitude,
+    get_continent(
+        ROUND((RANDOM() * 180 - 90)::NUMERIC, 6)::DOUBLE PRECISION,
+        ROUND((RANDOM() * 360 - 180)::NUMERIC, 6)::DOUBLE PRECISION
+    ) AS continent
+FROM public.students;
+
+COMMIT;
 ```
 
 
-```sql
-SELECT * FROM chess_tournament();
-```
+<img width="654" alt="image" src="https://github.com/user-attachments/assets/c0e602dc-438c-45d4-85ba-cdc908e544ec" />
+
+
 
 
 
