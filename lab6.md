@@ -323,3 +323,64 @@ VALUES (847516, 'e1feba4f-dd12-46dc-b4a9-b56af65fb1d4', 2);
 
 <img width="654" alt="image" src="https://github.com/user-attachments/assets/46359778-b759-4a3b-89fd-35add6506903" />
 
+
+### num 69
+
+Создайте триггер, сохраняющий информацию об изменениях оценок у студентов.
+
+
+```sql
+CREATE TABLE  mark_changes (
+    change_id SERIAL PRIMARY KEY,
+    student_id INT,
+    field_id UUID,
+    old_mark INT,
+    new_mark INT,
+    change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+
+```sql
+CREATE OR REPLACE FUNCTION log_mark_changes() 
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF OLD.mark IS DISTINCT FROM NEW.mark THEN
+        INSERT INTO mark_changes (student_id, field_id, old_mark, new_mark)
+        VALUES (OLD.student_id, OLD.field, OLD.mark, NEW.mark);
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ ;
+
+CREATE TRIGGER log_mark_changes_trigger
+AFTER UPDATE ON field_comprehensions
+FOR EACH ROW
+EXECUTE FUNCTION log_mark_changes();
+```
+
+
+```sql
+SELECT students.student_id, students.last_name, field_comprehensions.mark,
+							field_comprehensions.field 
+									, fields.field_name
+FROM students
+JOIN field_comprehensions ON field_comprehensions.student_id  = students.student_id
+JOIN fields ON fields.field_id = field_comprehensions.field
+WHERE students.student_id = '847516'
+ORDER BY field_comprehensions.mark
+```
+
+```sql
+UPDATE field_comprehensions
+SET mark = 4
+WHERE student_id = 847516 AND field = 'a3043707-440b-4bc4-bd1c-defdfe87f745';
+```
+
+
+<img width="1054" alt="image" src="https://github.com/user-attachments/assets/83ce9881-fbb5-45c0-a263-6266475bfdf4" />
+
+
