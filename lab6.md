@@ -205,7 +205,9 @@ CREATE TABLE IF NOT EXISTS public.student_locations (
 );
 
 -- Функция для определения материка по координатам
-CREATE OR REPLACE FUNCTION get_continent(lat DOUBLE PRECISION, lon DOUBLE PRECISION) RETURNS VARCHAR AS $$
+CREATE OR REPLACE FUNCTION get_continent(lat DOUBLE PRECISION, lon DOUBLE PRECISION) RETURNS VARCHAR
+LANGUAGE plpgsql
+ AS $$
 BEGIN
     IF lat BETWEEN 1 AND 77 AND lon BETWEEN -9 AND 67 THEN
         RETURN 'Europe';
@@ -223,7 +225,7 @@ BEGIN
         RETURN 'Ocean';
     END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Заполнение таблицы случайными координатами
 INSERT INTO public.student_locations (student_id, latitude, longitude, continent)
