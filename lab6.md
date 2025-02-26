@@ -186,3 +186,33 @@ FROM students;
 ### num 19
 
 Напишите скрипт имитирующий шахматный турнир. Выберите случайным образом 10 студентов.  Каждый играет с каждым по одному разу. Результат игры между двумя участниками выбирается рандомно из победы (победивший получает 2 очка, проигравший 0) и ничьи (каждому добавляется по одному баллу). После проведения первого тура отсеиваются 2 участника набравшие наименьшее количество очков. Проводится 2 тур между оставшимися 8 студентами. И так продолжать до тех пор, пока не останутся два победителя. Вывести результаты каждой игры каждого тура (фамилии участников и результат игры) и также для каждого тура итоговые таблицы всех участников с суммой полученных баллов в порядке убывания очков.
+
+
+
+
+
+### num 29
+Создайте процедуру продления студенческих билетов у определенной группы на 1 год. Входной параметр - номер группы
+
+```sql
+
+SELECT student_ids.student_id, expiration_date, students.students_group_number
+FROM student_ids
+JOIN students ON students.student_id =student_ids. student_id
+
+CALL extend_student_ids('ИВТ-11');
+```
+
+```sql
+CREATE OR REPLACE PROCEDURE extend_student_ids(group_number VARCHAR)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE student_ids
+    SET expiration_date = expiration_date + INTERVAL '1 year'
+    WHERE student_id IN (SELECT student_id FROM students WHERE students_group_number = extend_student_ids.group_number);
+END;
+$$ ;
+
+```
+
