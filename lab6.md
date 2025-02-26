@@ -273,3 +273,53 @@ SELECT * FROM get_professors_in_unit(1);
 <img width="388" alt="image" src="https://github.com/user-attachments/assets/83a5644f-553e-46dd-aba4-113b36bfb08b" />
 
 
+### num 59
+
+Создайте триггер, запрещающий ставить студенту больше 4 двоек.
+
+```sql
+CREATE OR REPLACE FUNCTION prevent_too_many_Badmarks() 
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    fail_count INT;
+BEGIN
+    SELECT COUNT(*) INTO fail_count
+    FROM field_comprehensions
+    WHERE student_id = NEW.student_id AND mark = 2;
+    
+    IF fail_count >= 4 THEN
+        RAISE EXCEPTION 'Студент уже имеет 4 или более двоек';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$;
+
+
+CREATE TRIGGER prevent_too_many_Badmarks_trigger
+BEFORE INSERT OR UPDATE ON field_comprehensions
+FOR EACH ROW
+EXECUTE FUNCTION prevent_too_many_Badmarks();  
+```
+
+```sql
+SELECT students.student_id, students.last_name, field_comprehensions.mark,
+							field_comprehensions.field 
+									, fields.field_name
+FROM students
+JOIN field_comprehensions ON field_comprehensions.student_id  = students.student_id
+JOIN fields ON fields.field_id = field_comprehensions.field
+WHERE students.student_id = '847516'
+ORDER BY field_comprehensions.mark
+
+
+INSERT INTO field_comprehensions (student_id, field, mark)
+VALUES (847516, 'e1feba4f-dd12-46dc-b4a9-b56af65fb1d4', 2);
+```
+
+<img width="1123" alt="image" src="https://github.com/user-attachments/assets/478dfed8-b602-4c58-8280-75fbef41e216" />
+
+<img width="654" alt="image" src="https://github.com/user-attachments/assets/46359778-b759-4a3b-89fd-35add6506903" />
+
