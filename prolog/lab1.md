@@ -81,39 +81,122 @@ append(FirstPart, SecondPart, List) — объединяет FirstPart и Second
 
 
 ```pl
-inary_to_int(Bin, Num) :-
+binary_to_int(Bin, Num) :-
     atom_chars(Bin, Chars),        % Преобразуем строку в список символов.
-    binary_to_int_helper(Chars, Num).  % Вызываем вспомогательную функцию.
+    reverse(Chars, ReversedChars), % Разворачиваем список символов.
+    binary_to_int_parse(ReversedChars, Num).  % Вызываем вспомогательную функцию.
 
 % Вспомогательная функция для обработки списка символов.
-binary_to_int_helper([], 0).  % Если список пуст, результат 0.
-binary_to_int_helper(['-'|Chars], -Num) :-  % Если первый символ '-', результат будет отрицательным.
-    binary_to_int_helper(Chars, Num).
-binary_to_int_helper([Char|Chars], Num) :-
+binary_to_int_parse([], 0).  % Если список пуст, результат 0.
+binary_to_int_parse(['-'|Chars], -Num) :-  % Если первый символ '-', результат будет отрицательным.
+    binary_to_int_parse(Chars, Num).
+binary_to_int_parse([Char|Chars], Num) :-
     char_code(Char, Code),        % Получаем ASCII-код символа.
     Code >= 48, Code =< 49,       % Проверяем, что символ — '0' или '1'.
-    binary_to_int_helper(Chars, Rest),  % Рекурсивно обрабатываем оставшиеся символы.
+    binary_to_int_parse(Chars, Rest),  % Рекурсивно обрабатываем оставшиеся символы.
     Num is (Code - 48) + 2 * Rest.  % Вычисляем значение числа.
 ```
+
+```pl
+binary_to_int("111", Num).
+```
+Num рассчитывается по формуле: Num = ( Текущий бит ) + 2 × ( Оставшаяся часть ) Num=(Текущий бит)+2×(Оставшаяся часть) Это аналогично тому, как двоичное число переводится в десятичное.
+
+<img width="657" alt="image" src="https://github.com/user-attachments/assets/86c27a4c-5cca-4323-9da2-2cbab4f3533d" />
+
 
 ## 5. Функция `sliding_average(List, WindowSize)`
 
 Задайте функцию `sliding_average(List, WindowSize)`, которая возвращает скользящее среднее списка `List` с размером окна `WindowSize`.
 
-**Пример:**
+Скользящее среднее (или скользящая средняя) - это метод анализа временных рядов, который используется для выявления основных тенденций в данных. Он представляет собой последовательность средних значений подмножеств исходного набора данных.
+
+В простейшем случае, если у нас есть временной ряд с N точками данных, и мы хотим рассчитать скользящее среднее с окном размером W, то мы начинаем с первых W точек данных, находим их среднее значение, затем перемещаемся на одну точку вправо, оставляя первую точку и добавляя следующую после W-й точки, снова находим среднее значение этих W точек, и так далее до конца ряда.
+
+Например, если у нас есть данные [1, 2, 3, 4, 5] и мы хотим найти скользящее среднее с окном размером 3, то мы получим [(1+2+3)/3, (2+3+4)/3, (3+4+5)/3], что равно [2, 3, 4].
+
+Этот метод полезен для сглаживания "шума" или случайных колебаний в данных, чтобы можно было лучше видеть общие тенденции.
+
+```pl
+
+sliding_average(List, WindowSize, Averages) :-
+    length(List, Len),            % Получаем длину списка.
+    Len >= WindowSize,            % Проверяем, что список достаточно длинный.
+    sliding_average_helper(List, WindowSize, Len, Averages).  % Вызываем вспомогательную функцию.
+
+% Вспомогательная функция для вычисления скользящего среднего.
+sliding_average_helper(List, WindowSize, Len, Averages) :-
+    Len >= WindowSize,            % Пока в списке достаточно элементов.
+    length(Window, WindowSize),   % Создаем окно размером WindowSize.
+    append(Window, _, List),     % Разделяем список на окно и оставшиеся элементы.
+    sum_list(Window, Sum),        % Суммируем элементы окна.
+    Average is Sum / WindowSize,  % Вычисляем среднее значение.
+    append([Average], RestAverages, Averages),  % Добавляем среднее в результат.
+    List = [_|Tail],              % Переходим к следующему окну.
+    sliding_average_helper(Tail, WindowSize, Len - 1, RestAverages).  % Рекурсивный вызов.
+sliding_average_helper(_, _, _, []).  % Если элементов недостаточно, возвращаем пустой список.
 ```
-sliding_average([1, 2, 3, 4, 5, 6], 3) => [(1+2+3)/3, (2+3+4)/3, (3+4+5)/3, (4+5+6)/3] == [2.0, 3.0, 4.0, 5.0]
+
+```pl
+sliding_average([1, 2, 3, 4, 5, 6], 3, Averages).
 ```
+
+<img width="919" alt="image" src="https://github.com/user-attachments/assets/3efa491c-888d-48dd-8f03-393c24d8195e" />
+
 
 ## 6. Функция `intersect(List1, List2)`
 
 Задайте функцию `intersect(List1, List2)`, находящую все общие элементы двух списков `List1` и `List2`.
 
-**Примеры:**
+
+```pl
+intersect(List1, List2, Common) :-
+    member(X, List1),             % Проверяем, что элемент X есть в List1.
+    member(X, List2),             % Проверяем, что элемент X есть в List2.
+    list_to_set(Common, CommonSet).  % Убираем дубликаты из результата.
 ```
-intersect([1, 3, 2, 5], [2, 3, 4]) => [3, 2] (или [2, 3]).
-intersect([1, 6, 5], [2, 3, 4]) => [].
+
+
+```pl
+intersect([1, 3, 2, 5], [2, 3, 4], Common).
+
+intersect([1, 6, 5], [2, 3, 4], Common).
 ```
+
+
+```prolog
+findall(X, (member(X, List1), member(X, List2)), Common)
+```
+- `member(X, List1)` — выбираем элемент `X` из `List1`.
+- `member(X, List2)` — проверяем, содержится ли `X` в `List2`.
+- `findall/3` собирает **все такие `X`** в список `Common`, включая возможные дубликаты.
+
+**Пример работы `findall/3`:**
+```prolog
+?- findall(X, (member(X, [1, 3, 2, 5]), member(X, [2, 3, 4])), Common).
+Common = [3, 2].
+```
+Здесь `3` и `2` присутствуют в обоих списках, поэтому они добавлены в `Common`.
+
+### Удаление дубликатов
+```prolog
+list_to_set(Common, CommonSet).
+```
+- `list_to_set/2` преобразует список в **множество**, удаляя дубликаты.
+
+**Пример работы `list_to_set/2`:**
+```prolog
+?- list_to_set([3, 3, 2, 2], X).
+X = [3, 2].
+```
+Это позволяет получить **пересечение без повторений**.
+
+
+
+<img width="873" alt="image" src="https://github.com/user-attachments/assets/654e6dcb-c580-49c5-a864-8d212e93fd2f" />
+
+<img width="863" alt="image" src="https://github.com/user-attachments/assets/fde89c8a-b670-44bf-ac8d-ad03da90678d" />
+
 
 ## 7. Функция `is_date(DayOfMonth, MonthOfYear, Year)`
 
