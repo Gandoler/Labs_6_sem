@@ -24,14 +24,30 @@ num_roots(A, B, C, 0) :-
     Discriminant < 0.             % Если дискриминант отрицательный, корней нет.
 ```
 
+```pl
+num_roots(1, 0, -2, N).
+```
+
+<img width="993" alt="image" src="https://github.com/user-attachments/assets/b6f4fc5d-e731-4975-8b17-d622743daba7" />
+
+
 ## 2. Функция `init(List)`
 
 Задайте функцию `init(List)`, возвращающую список `List` без последнего элемента.
 
-**Пример:**
+
+```pl
+init(List, InitList) :-
+    append(InitList, [_], List).
 ```
-init([1,2,3,4]) => [1,2,3]
-```
+
+В контексте append(InitList, [_], List), это значит:
+
+InitList получает все элементы List, кроме последнего.
+[_]- ананонимная переменная и как бы . append делять лист на инит и эту анонимную переменную
+
+<img width="1009" alt="image" src="https://github.com/user-attachments/assets/de4b6b99-2bba-4dc6-954f-2ee05fc1c439" />
+
 
 ## 3. Функция `split(List, N)`
 
@@ -41,6 +57,9 @@ init([1,2,3,4]) => [1,2,3]
 ```
 split([1, 3, 4, 5], 2) => {[1, 3], [4, 5]}
 ```
+
+![Uploading image.png…]()
+
 
 ## 4. Функция `binary_to_int(Bin)`
 
