@@ -150,10 +150,9 @@ sliding_average([1, 2, 3, 4, 5, 6], 3, Averages).
 
 
 ```pl
-intersect(List1, List2, Common) :-
-    member(X, List1),             % Проверяем, что элемент X есть в List1.
-    member(X, List2),             % Проверяем, что элемент X есть в List2.
-    list_to_set(Common, CommonSet).  % Убираем дубликаты из результата.
+intersect(List1, List2, CommonSet) :-
+    findall(X, (member(X, List1), member(X, List2)), Common),
+    list_to_set(Common, CommonSet).
 ```
 
 
