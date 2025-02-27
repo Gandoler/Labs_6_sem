@@ -201,8 +201,61 @@ X = [3, 2].
 
 Задайте функцию `is_date(DayOfMonth, MonthOfYear, Year)`, определяющую номер дня недели по числу месяца, номеру месяца и году. Год является високосным, если он либо делится на 4, но не на 100, либо делится на 400. В качестве точки отсчёта возьмите 1 января 2000 года (суббота). Не используйте каких-то формул для нахождения дня недели, это задание на рекурсию!
 
-**Примеры:**
+
+```pl
+% Определение количества дней в месяце
+days_in_month(1, _, 31).
+days_in_month(2, Y, D) :- (leap_year(Y) -> D is 29 ; D is 28).
+days_in_month(3, _, 31).
+days_in_month(4, _, 30).
+days_in_month(5, _, 31).
+days_in_month(6, _, 30).
+days_in_month(7, _, 31).
+days_in_month(8, _, 31).
+days_in_month(9, _, 30).
+days_in_month(10, _, 31).
+days_in_month(11, _, 30).
+days_in_month(12, _, 31).
+
+% Проверка високосного года
+leap_year(Y) :- (Y mod 400 =:= 0; (Y mod 4 =:= 0, Y mod 100 =\= 0)).
+
+% Базовый случай: 1 января 2000 — это суббота (6-й день недели)
+is_date(1, 1, 2000, 6).
+
+% Если дата раньше 1 января 2000, двигаемся назад
+is_date(D, M, Y, W) :-
+    (Y < 2000 ; (Y =:= 2000, M < 1) ; (Y =:= 2000, M =:= 1, D < 1)),  
+    prev_date(D, M, Y, PrevD, PrevM, PrevY),  
+    is_date(PrevD, PrevM, PrevY, PrevW),
+    W is (PrevW - 1 + 7) mod 7.
+
+% Если дата позже 1 января 2000, двигаемся вперёд
+is_date(D, M, Y, W) :-
+    (Y > 2000 ; (Y =:= 2000, M > 1) ; (Y =:= 2000, M =:= 1, D > 1)),  
+    next_date(D, M, Y, NextD, NextM, NextY),  
+    is_date(NextD, NextM, NextY, NextW),
+    W is (NextW + 1) mod 7.
+
+% Определение предыдущей даты
+prev_date(1, 1, Y, 31, 12, PrevY) :- PrevY is Y - 1.
+prev_date(1, M, Y, PrevD, PrevM, Y) :-
+    PrevM is M - 1,
+    days_in_month(PrevM, Y, PrevD).
+prev_date(D, M, Y, PrevD, M, Y) :-
+    PrevD is D - 1.
+
+% Определение следующей даты
+next_date(31, 12, Y, 1, 1, NextY) :- NextY is Y + 1.
+next_date(D, M, Y, 1, NextM, Y) :-
+    days_in_month(M, Y, D),
+    NextM is M + 1.
+next_date(D, M, Y, NextD, M, Y) :-
+    NextD is D + 1.
+
 ```
-is_date(1, 1, 2000) => 6
-is_date(1, 2, 2013) => 5
+
+
+```pl
+is_date(1, 1, 2000, DayOfWeek).
 ```
