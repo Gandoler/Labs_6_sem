@@ -71,24 +71,20 @@ empty не содержит листьев, поэтому результат 0.
 ### Описание задачи
 Разработать интерфейс для абстрактного типа данных "очередь с приоритетом", который позволяет хранить пары (значение, приоритет) и поддерживает операцию извлечения пары с минимальным приоритетом.
 
-### Интерфейс
-```python
-class PriorityQueue:
-    def __init__(self):
-        # Инициализация очереди
-        pass
+Очередь с приоритетом должна поддерживать следующие операции:
+Вставка элемента: insert(Queue, Value, Priority, NewQueue).
+Извлечение элемента с минимальным приоритетом: extract_min(Queue, Value, Priority, NewQueue).
+Проверка на пустоту: is_empty(Queue).
 
-    def insert(self, value, priority):
-        # Вставка элемента в очередь
-        pass
+```prolog
+% Вставка элемента
+insert(Queue, Value, Priority, NewQueue).
 
-    def extract_min(self):
-        # Извлечение элемента с минимальным приоритетом
-        pass
+% Извлечение минимального элемента
+extract_min(Queue, Value, Priority, NewQueue).
 
-    def is_empty(self):
-        # Проверка на пустоту очереди
-        pass
+% Проверка, пуста ли очередь
+is_empty(Queue).
 ```
 
 ## Задание 3: Функция to_list
@@ -96,39 +92,118 @@ class PriorityQueue:
 ### Описание задачи
 Реализовать функцию `to_list(priority_queue) -> [any]`, которая возвращает список всех значений, содержащихся в очереди, в порядке возрастания приоритета.
 
+.1 Определение пустой очереди
+
+```prolog
+empty_queue([]).
+```
+
+Определяет пустую очередь как пустой список [].
+
+2. Вставка элемента в очередь
+
+```prolog
+insert(Queue, Value, Priority, NewQueue) :-
+    append(Queue, [(Value, Priority)], TempQueue),
+    sort(2, @=<, TempQueue, NewQueue). % Сортировка по приоритету
+```
+Добавляет элемент (Value, Priority) в конец списка Queue.
+Затем сортирует список по приоритету (sort(2, @=<, ...)).
+
+3. Извлечение элемента с минимальным приоритетом
+   
+```prolog
+extract_min([(Value, Priority) | Rest], Value, Priority, Rest).
+```
+
+Так как список отсортирован по приоритету, первый элемент (Value, Priority) — минимальный.
+Удаляет этот элемент и возвращает обновлённую очередь Rest.
+
+4. Проверка, пуста ли очередь
+
+```prolog
+is_empty([]).
+```
+Успешно выполняется, если очередь пуста ([]).
+5. Преобразование очереди в список значений (без приоритетов)
+
+```prolog
+to_list(Queue, Values) :-
+    to_list_helper(Queue, [], Values).
+```
+
+Вызывает вспомогательный предикат to_list_helper, начиная с пустого аккумулятора.
+
+```prolog
+to_list_helper([], Acc, Values) :-
+    reverse(Acc, Values).
+```
+
+Если очередь пуста, переворачивает аккумулятор Acc и возвращает Values.
+
+```prolog
+to_list_helper([(Value, _) | Rest], Acc, Values) :-
+    to_list_helper(Rest, [Value | Acc], Values).
+```
+
+Рекурсивно добавляет Value в аккумулятор, убирая приоритет.
+
 ### Реализация
-```python
-def to_list(priority_queue):
-    # Ваш код здесь
-    pass
+```prolog
+empty_queue([]).
+
+% Вставка элемента в очередь
+insert(Queue, Value, Priority, NewQueue) :-
+    append(Queue, [(Value, Priority)], TempQueue),
+    sort(2, @=<, TempQueue, NewQueue). % Сортировка по приоритету
+
+% Извлечение элемента с минимальным приоритетом
+extract_min([(Value, Priority) | Rest], Value, Priority, Rest).
+
+% Проверка, пуста ли очередь
+is_empty([]).
+
+% Преобразование очереди в список значений в порядке возрастания приоритета
+to_list(Queue, Values) :-
+    to_list_helper(Queue, [], Values).
+
+to_list_helper([], Acc, Values) :-
+    reverse(Acc, Values).
+to_list_helper([(Value, _) | Rest], Acc, Values) :-
+    to_list_helper(Rest, [Value | Acc], Values).
+
+% Пример использования
+example(List, Value, Priority) :-
+    empty_queue(Q0),
+    insert(Q0, a, 3, Q1),
+    insert(Q1, b, 1, Q2),
+    insert(Q2, c, 2, Q3),
+    extract_min(Q3, Value, Priority, Q4),
+    to_list(Q4, List).
 ```
 
 ### Примеры использования
-```python
-# Примеры вызова функции и их результаты
+```prolog
+example(List, Value, Priority)
+
+
+example4(List, First, Second) :-
+    empty_queue(Q0),
+    insert(Q0, apple, 3, Q1),
+    insert(Q1, banana, 1, Q2),
+    is_empty(Q2),  % Проверяем перед извлечением (вернёт false)
+    extract_min(Q2, First, _, Q3),
+    extract_min(Q3, Second, _, Q4),
+    is_empty(Q4),  % Здесь уже true (очередь пуста)
+    to_list(Q4, List).
 ```
 
-## Задание 4: Реализации очереди с приоритетом
+<img width="1019" alt="image" src="https://github.com/user-attachments/assets/5d392703-4cbe-4703-a76f-2e26ec2d5426" />
 
-### Реализация 1: Использование списка
-```python
-class PriorityQueueList:
-    def __init__(self):
-        # Инициализация очереди
-        pass
 
-    def insert(self, value, priority):
-        # Вставка элемента в очередь
-        pass
+## Задание 4: Реализации на примере кучи
 
-    def extract_min(self):
-        # Извлечение элемента с минимальным приоритетом
-        pass
 
-    def is_empty(self):
-        # Проверка на пустоту очереди
-        pass
-```
 
 ### Реализация 2: Использование кучи (необязательно)
 ```python
