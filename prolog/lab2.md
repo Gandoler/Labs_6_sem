@@ -207,7 +207,43 @@ for(1, [X]>>(X =< 5), [X, Y]>>(Y is X + 1), [X]>>(writeln(X))).
 
 
 ```prolog
+% Базовые случаи: пустой список и список из одного элемента уже отсортированы.
+sortBy(_, [], []).
+sortBy(_, [X], [X]).
 
+
+sortBy(Comparator, List, Sorted) :-
+    length(List, Len),              % Вычисляем длину списка
+    Half is Len // 2,               % Находим середину списка
+    length(Left, Half),             % Создаём список Left длины Half
+    append(Left, Right, List),      % Разделяем List на Left и Right
+    sortBy(Comparator, Left, LeftSorted),   % Рекурсивно сортируем левую часть
+    sortBy(Comparator, Right, RightSorted), % Рекурсивно сортируем правую часть
+    merge(Comparator, LeftSorted, RightSorted, Sorted). % Объединяем два отсортированных списка
+
+% Если один из списков пуст — возвращаем другой список.
+merge(_, [], Right, Right).
+merge(_, Left, [], Left).
+
+% Если X < Y, X идёт первым.
+merge(Comparator, [X|Left], [Y|Right], [X|Result]) :-
+    call(Comparator, X, Y, less),
+    merge(Comparator, Left, [Y|Right], Result).
+
+% Если X > Y, Y идёт первым.
+merge(Comparator, [X|Left], [Y|Right], [Y|Result]) :-
+    call(Comparator, X, Y, greater),
+    merge(Comparator, [X|Left], Right, Result).
+
+% Если X == Y, включаем оба элемента.
+merge(Comparator, [X|Left], [Y|Right], [X, Y|Result]) :-
+    call(Comparator, X, Y, equal),
+    merge(Comparator, Left, Right, Result).
+
+% Пример компаратора для чисел (по возрастанию).
+num_cmp(X, Y, less) :- X < Y.
+num_cmp(X, Y, greater) :- X > Y.
+num_cmp(X, Y, equal) :- X =:= Y.
 ```
 
 ```prolog
