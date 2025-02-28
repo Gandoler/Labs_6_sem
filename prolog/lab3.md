@@ -9,26 +9,28 @@
 ### Реализация
 ```prolog
 % Базовый случай: лист
-count_leaves(tree(empty, _, empty), 1).
+count_leaves(tree(empty, _, empty), 1).  
+% Если дерево состоит только из корня (оба поддерева пусты), это лист. Количество листьев = 1.
 
 % Рекурсивный случай: левое поддерево не пусто
 count_leaves(tree(Left, _, empty), Count) :-
-    count_leaves(Left, LeftCount),
-    Count is LeftCount.
+    count_leaves(Left, LeftCount),  % Рекурсивно считаем листья в левом поддереве.
+    Count is LeftCount.  % Количество листьев равно количеству листьев в левом поддереве.
 
 % Рекурсивный случай: правое поддерево не пусто
 count_leaves(tree(empty, _, Right), Count) :-
-    count_leaves(Right, RightCount),
-    Count is RightCount.
+    count_leaves(Right, RightCount),  % Рекурсивно считаем листья в правом поддереве.
+    Count is RightCount.  % Количество листьев равно количеству листьев в правом поддереве.
 
 % Рекурсивный случай: оба поддерева не пусты
 count_leaves(tree(Left, _, Right), Count) :-
-    count_leaves(Left, LeftCount),
-    count_leaves(Right, RightCount),
-    Count is LeftCount + RightCount.
+    count_leaves(Left, LeftCount),  % Рекурсивно считаем листья в левом поддереве.
+    count_leaves(Right, RightCount),  % Рекурсивно считаем листья в правом поддереве.
+    Count is LeftCount + RightCount.  % Общее количество листьев равно сумме листьев в левом и правом поддеревьях.
 
 % Пустое дерево не имеет листьев
-count_leaves(empty, 0).
+count_leaves(empty, 0).  
+% Если дерево пустое, количество листьев = 0.
 ```
 
 
