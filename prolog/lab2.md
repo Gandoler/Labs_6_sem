@@ -239,13 +239,19 @@ merge(Comparator, [X|Left], [Y|Right], [Y|Result]) :-
 merge(Comparator, [X|Left], [Y|Right], [X, Y|Result]) :-
     call(Comparator, X, Y, equal),
     merge(Comparator, Left, Right, Result).
+
+num_cmp(X, Y, less) :- X < Y.
+num_cmp(X, Y, greater) :- X > Y.
+num_cmp(X, Y, equal) :- X =:= Y.
+
 ```
 
 ```prolog
-sortBy([X, Y, R]>>(X < Y -> R = less; X =:= Y -> R = equal; R = greater), [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5], Sorted).
+sortBy(num_cmp, [4, 2, 5, 1, 3], Sorted).
 ```
 
-<img width="1490" alt="image" src="https://github.com/user-attachments/assets/7a31e6cc-893c-4904-bfa9-df9c822190b2" />
+<img width="920" alt="image" src="https://github.com/user-attachments/assets/31a7f09b-2cfb-44fd-8818-2039809e5614" />
+
 
 
 
