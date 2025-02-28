@@ -239,11 +239,6 @@ merge(Comparator, [X|Left], [Y|Right], [Y|Result]) :-
 merge(Comparator, [X|Left], [Y|Right], [X, Y|Result]) :-
     call(Comparator, X, Y, equal),
     merge(Comparator, Left, Right, Result).
-
-% Пример компаратора для чисел (по возрастанию).
-num_cmp(X, Y, less) :- X < Y.
-num_cmp(X, Y, greater) :- X > Y.
-num_cmp(X, Y, equal) :- X =:= Y.
 ```
 
 ```prolog
