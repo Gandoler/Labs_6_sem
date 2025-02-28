@@ -1,6 +1,4 @@
-Конечно, вот примерный скелет разметки для отчета в формате Markdown:
 
-```markdown
 # Отчет по выполнению заданий
 
 ## Задание 1: Функция count_leaves
@@ -9,16 +7,64 @@
 Реализовать функцию `count_leaves(bin_tree) -> integer`, которая возвращает число листьев дерева.
 
 ### Реализация
-```python
-def count_leaves(bin_tree):
-    # Ваш код здесь
-    pass
+```prolog
+% Базовый случай: лист
+count_leaves(tree(empty, _, empty), 1).
+
+% Рекурсивный случай: левое поддерево не пусто
+count_leaves(tree(Left, _, empty), Count) :-
+    count_leaves(Left, LeftCount),
+    Count is LeftCount.
+
+% Рекурсивный случай: правое поддерево не пусто
+count_leaves(tree(empty, _, Right), Count) :-
+    count_leaves(Right, RightCount),
+    Count is RightCount.
+
+% Рекурсивный случай: оба поддерева не пусты
+count_leaves(tree(Left, _, Right), Count) :-
+    count_leaves(Left, LeftCount),
+    count_leaves(Right, RightCount),
+    Count is LeftCount + RightCount.
+
+% Пустое дерево не имеет листьев
+count_leaves(empty, 0).
 ```
 
+
 ### Примеры использования
-```python
-# Примеры вызова функции и их результаты
+```prolog
+tree_example(
+    tree(
+        tree(tree(empty, d, empty), b, tree(empty, e, empty)),
+        a,
+        tree(empty, c, tree(empty, f, empty))
+    )
+).
+
+tree_example(Tree), count_leaves(Tree, Count).
 ```
+Базовый случай:
+
+Если узел — лист (tree(empty, _, empty)), возвращаем 1.
+Рекурсивные случаи:
+
+Если у узла только левое поддерево, считаем листья в нем.
+Если у узла только правое поддерево, считаем листья в нем.
+Если у узла оба поддерева, считаем листья в каждом и суммируем.
+Пустое дерево:
+
+empty не содержит листьев, поэтому результат 0.
+
+ Пример дерева:
+       a
+      / \
+     b   c
+    / \   \
+   d   e   f
+ Листья: d, e, f
+
+<img width="941" alt="image" src="https://github.com/user-attachments/assets/a1aa2d23-2c31-4830-a8bc-f1e52f8d9081" />
 
 ## Задание 2: Интерфейс очереди с приоритетом
 
@@ -120,6 +166,3 @@ class PriorityQueueHeap:
 
 ## Выводы
 Здесь можно сделать выводы о проделанной работе, сравнить эффективность различных реализаций и т.д.
-```
-
-Этот шаблон поможет вам структурировать ваш отчет и упростит процесс написания.
