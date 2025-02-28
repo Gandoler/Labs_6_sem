@@ -41,21 +41,84 @@
 
 Определите предикат `factorial(N, FactN)`, который выполняется, если `FactN` -- факториал `N`.
 
-Пример:
+
 ```prolog
-?- fact(3, X).
-X = 6
+factorial(0, 1).
+factorial(N, FactN) :-
+    N > 0,
+    N1 is N - 1,
+    factorial(N1, FactN1),
+    FactN is N * FactN1.
 ```
+
+<img width="574" alt="image" src="https://github.com/user-attachments/assets/22773ccf-f3e2-45d0-971f-588eec95103e" />
+
+
+Запрос: factorial(3, Fact).
+
+N = 3, условие N > 0 выполняется.
+Вычисляем N1 = 3 - 1 = 2.
+Вызываем factorial(2, FactN1).
+Запрос: factorial(2, FactN1).
+
+N = 2, условие N > 0 выполняется.
+Вычисляем N1 = 2 - 1 = 1.
+Вызываем factorial(1, FactN1).
+Запрос: factorial(1, FactN1).
+
+N = 1, условие N > 0 выполняется.
+Вычисляем N1 = 1 - 1 = 0.
+Вызываем factorial(0, FactN1).
+Запрос: factorial(0, FactN1).
+
+Это базовый случай, который возвращает FactN1 = 1.
+Теперь начинается возврат значений по цепочке:
+
+factorial(1, Fact1): Fact1 = 1 * 1 = 1
+factorial(2, Fact2): Fact2 = 2 * 1 = 2
+factorial(3, Fact3): Fact3 = 3 * 2 = 6
+Ответ: Fact = 6.
 
 ## Задание 2: Определение предиката `occurrences(Elem, List, Number)`
 
 Определите предикат `occurrences(Elem, List, Number)`, который выполняется, если элемент `Elem` встречается в списке `List` `Number` раз.
 
-Пример:
+
 ```prolog
-?- occurrences(3, [1,2,3,1,3], N).
-N = 2
+occurrences(_, [], 0).
+occurrences(Elem, [Elem|Tail], N) :-
+    occurrences(Elem, Tail, N1),
+    N is N1 + 1.
+occurrences(Elem, [Head|Tail], N) :-
+    Elem \= Head,
+    occurrences(Elem, Tail, N).
 ```
+
+<img width="685" alt="image" src="https://github.com/user-attachments/assets/cb1ddbb5-e78c-49d7-8bf1-521608f70f86" />
+
+
+#### **Пример 1: `occurrences(a, [a, b, a], N).`**
+- `List = [a, b, a]`, `Elem = a`
+1. `a == a` → рекурсивный вызов `occurrences(a, [b, a], N1)`, `N is N1 + 1`
+2. `b \= a` → рекурсивный вызов `occurrences(a, [a], N2)`, `N2 = N1`
+3. `a == a` → рекурсивный вызов `occurrences(a, [], N3)`, `N3 = 0`
+4. Базовый случай → `N3 = 0`
+5. Поднятие вверх:  
+   - `N2 = 0 + 1 = 1`
+   - `N1 = 1 + 1 = 2`
+   - `N = 2`
+
+Пример 1: occurrences(a, [a, b, a], N).
+List = [a, b, a], Elem = a
+a == a → рекурсивный вызов occurrences(a, [b, a], N1), N is N1 + 1
+b \= a → рекурсивный вызов occurrences(a, [a], N2), N2 = N1
+a == a → рекурсивный вызов occurrences(a, [], N3), N3 = 0
+Базовый случай → N3 = 0
+Поднятие вверх:
+N2 = 0 + 1 = 1
+N1 = 1 + 1 = 2
+N = 2
+
 
 ## Задание 3: Определение предиката `rule(Rule)`
 
