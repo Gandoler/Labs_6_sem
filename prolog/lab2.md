@@ -72,6 +72,10 @@ example(Result) :-
 
 ```
 
+```prolog
+example()
+```
+
 Функция zipwith/3 — это обобщённая версия zip/2, которая позволяет применить произвольную бинарную функцию ко всем соответствующим элементам двух списков.
 
 
@@ -129,7 +133,7 @@ iteratemap(F, X, N, [X|Result]) :-
 ```
 
 ```prolog
-zipwith([X, Y]>>(Result = {X, Y}), [1, 2, 3], [4, 5, 6], Result).
+iteratemap([X, Y]>>(Y is X * 2), 1, 4, Result).
 ```
 
 <img width="947" alt="image" src="https://github.com/user-attachments/assets/34f04470-254c-42d4-ab8c-b5aa0bc5337f" />
