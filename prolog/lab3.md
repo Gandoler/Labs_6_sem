@@ -58,6 +58,7 @@ tree_example(Tree), count_leaves(Tree, Count).
 
 empty не содержит листьев, поэтому результат 0.
 
+```
  Пример дерева:
        a
       / \
@@ -65,6 +66,7 @@ empty не содержит листьев, поэтому результат 0.
     / \   \
    d   e   f
  Листья: d, e, f
+```
 
 <img width="941" alt="image" src="https://github.com/user-attachments/assets/a1aa2d23-2c31-4830-a8bc-f1e52f8d9081" />
 
