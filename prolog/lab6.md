@@ -67,12 +67,28 @@ Prolog пытается найти потомков петр, но не нахо
 
 Задайте предикат `starts_with(List1, List2)`, который успешен, если `List2` -- начальная часть `List1`.
 
+Примеры работы
+1. Проверяем, что [1, 2, 3, 4] начинается с [1, 2]
+```prolog
+?- starts_with([1,2,3,4], [1,2]).
+```
+Развернём шаги рекурсии:
+
+[1|[2,3,4]] и [1|[2]] → Головы равны (1 = 1), вызываем starts_with([2,3,4], [2])
+[2|[3,4]] и [2|[]] → Головы равны (2 = 2), вызываем starts_with([3,4], [])
+Пустой список [] всегда является началом любого списка, значит, срабатывает базовый случай starts_with(_, []).
+Результат: true.
+
+```prolog
+starts_with(_, []).
+starts_with([H|T1], [H|T2]) :- starts_with(T1, T2).
+```
+<img width="777" alt="image" src="https://github.com/user-attachments/assets/477a1f9a-7e58-4abb-93ff-f50388c0daa5" />
+
+
 Пример:
 ```prolog
-?- starts_with([a,b,c], X).
-X = [a, b];
-X = [a];
-X = [].
+starts_with([1,2,3], [1,2]).
 ```
 Проверьте поведение, если переменные на других местах.
 
@@ -80,12 +96,31 @@ X = [].
 
 Задайте предикат `replace(List, Member, Replacement, ResultList)`. `ResultList` должен быть результатом замены всех вхождений терма `Member` в `List` на `Replacement`.
 
+
+```prolog
+% Базовый случай: если список пуст, заменять нечего, возвращаем пустой список.
+replace([], _, _, []).
+
+% Если голова списка равна заменяемому элементу, заменяем её на Replacement
+% и рекурсивно обрабатываем оставшуюся часть списка.
+replace([Member|T], Member, Replacement, [Replacement|NewT]) :-
+    replace(T, Member, Replacement, NewT).
+
+% Если голова списка не равна заменяемому элементу, оставляем её без изменений
+% и рекурсивно обрабатываем оставшуюся часть списка.
+replace([H|T], Member, Replacement, [H|NewT]) :-
+    H \= Member,  % Проверяем, что H не равно Member
+    replace(T, Member, Replacement, NewT).
+```
+
+
+<img width="778" alt="image" src="https://github.com/user-attachments/assets/ab754e94-e42d-4d9d-985e-7e701a2407b7" />
+
 Пример:
 ```prolog
-?- replace([1,2,3,1,2,3], 1, 5, X).
-X = [1, 2, 5, 1, 2, 5].
+replace([1,2,3,1,2,3], 1, 5, X).
 ```
-Проверьте поведение, если переменные на других местах.
+
 
 ## Задание 4: Предикат `my_flatten(NestedList, FlattenedList)`
 
