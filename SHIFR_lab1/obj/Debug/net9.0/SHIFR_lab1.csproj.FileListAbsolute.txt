@@ -1,0 +1,15 @@
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/bin/Debug/net9.0/SHIFR_lab1
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/bin/Debug/net9.0/SHIFR_lab1.deps.json
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/bin/Debug/net9.0/SHIFR_lab1.runtimeconfig.json
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/bin/Debug/net9.0/SHIFR_lab1.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/bin/Debug/net9.0/SHIFR_lab1.pdb
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.GeneratedMSBuildEditorConfig.editorconfig
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.AssemblyInfoInputs.cache
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.AssemblyInfo.cs
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.csproj.CoreCompileInputs.cache
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.sourcelink.json
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/refint/SHIFR_lab1.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.pdb
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/SHIFR_lab1.genruntimeconfig.cache
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab1/obj/Debug/net9.0/ref/SHIFR_lab1.dll
