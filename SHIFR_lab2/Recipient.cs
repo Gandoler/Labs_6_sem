@@ -4,12 +4,17 @@ namespace SHIFR_lab2;
 
 public class Recipient
 {
+    
+    private static Recipient instance = new Recipient();
     private int p;
     private int q;
     private int e;
     private int phie;
     private int n;
 
+    public static Recipient Instance => instance;
+    private Recipient(){}
+    
     private void GetSimpledivisors(int num, List<int> result)
     {
         
@@ -62,7 +67,7 @@ public class Recipient
         return -1;
     }
 
-    private char unshifrChar(char i, int d)
+    private char unshifrChar(string i, int d)
     {
         return (char)(Math.Pow((Convert.ToInt32(i)), d) % n);
     }
@@ -85,7 +90,7 @@ public class Recipient
         if (d < 1) throw new Exception("Опа d не получилось");
 
         StringBuilder UnshifredMail = new StringBuilder();
-        foreach (var VARIABLE in mail_shfr)
+        foreach (var VARIABLE in mail_shfr.Split(", "))
         {
             UnshifredMail.Append(unshifrChar(VARIABLE, d));
         }

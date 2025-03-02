@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "SHIFR_lab2/1.0.0": {
+        "runtime": {
+          "SHIFR_lab2.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SHIFR_lab2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

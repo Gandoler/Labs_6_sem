@@ -1,3 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using SHIFR_lab2;
 
-Console.WriteLine("Hello, World!");
+public static class Program
+{
+
+    public static void Main()
+    {
+        string msg = "Privet";
+
+        string shfrMsg = Sender.SHifrMessage(msg);
+        Console.WriteLine(shfrMsg);
+        Recipient.Instance.ReadShifredMail(shfrMsg);
+    }
+    
+    
+}
