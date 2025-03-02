@@ -1,16 +1,19 @@
-﻿using SHIFR_lab2;
+﻿using System;
 
-public static class Program
+namespace SHIFR_lab2;
+
+class Program
 {
-
-    public static void Main()
+    static void Main()
     {
-        string msg = "Privet";
+        Console.WriteLine("Введите сообщение для шифрования:");
+        string message = Console.ReadLine();
 
-        string shfrMsg = Sender.SHifrMessage(msg);
-        Console.WriteLine(shfrMsg);
-        Recipient.Instance.ReadShifredMail(shfrMsg);
+        // Отправитель шифрует сообщение
+        string encryptedMessage = Sender.ShifrMessage(message);
+        Console.WriteLine("Зашифрованное сообщение: " + encryptedMessage);
+
+        // Получатель расшифровывает сообщение
+        Recipient.Instance.ReadShifredMail(encryptedMessage);
     }
-    
-    
 }

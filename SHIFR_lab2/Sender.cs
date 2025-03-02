@@ -1,23 +1,44 @@
+using System;
 using System.Text;
 
 namespace SHIFR_lab2;
 
 public static class Sender
 {
+    // Функция для шифрования символа
     public static int ShifrChar(char c, int e, int n)
     {
-        return (int)Math.Pow(Convert.ToInt32(c), e) % n;
+        return ModularExponentiation(Convert.ToInt32(c), e, n);
     }
-    
-    public static string SHifrMessage(string msg)
+
+    // Функция для шифрования строки
+    public static string ShifrMessage(string msg)
     {
-        (int, int) publicKey = Recipient.Instance.GetPublicKeyFromRecipient();
-        
+        (int e, int n) publicKey = Recipient.Instance.GetPublicKeyFromRecipient();
+
         StringBuilder shifrdString = new StringBuilder();
         foreach (var VARIABLE in msg)
         {
-            shifrdString.Append(ShifrChar(VARIABLE, publicKey.Item1, publicKey.Item2) + ", ");
+            shifrdString.Append(ShifrChar(VARIABLE, publicKey.e, publicKey.n) + ", ");
         }
         return shifrdString.ToString();
+    }
+
+    // Быстрое возведение в степень по модулю (ускоряет шифрование)
+    private static int ModularExponentiation(int baseNum, int exp, int mod)
+    {
+        int result = 1;
+        baseNum = baseNum % mod;
+
+        while (exp > 0)
+        {
+            if ((exp & 1) == 1) // Если exp нечетное
+                result = (result * baseNum) % mod;
+
+            exp = exp >> 1; // exp /= 2
+            baseNum = (baseNum * baseNum) % mod;
+        }
+
+        return result;
     }
 }
