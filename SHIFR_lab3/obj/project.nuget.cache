@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "nzXhoo9HwCI=",
+  "dgSpecHash": "yglzKJ5rJSc=",
   "success": true,
   "projectFilePath": "/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/SHIFR_lab3.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/gl.krutoimail.ru/.nuget/packages/microsoft.win32.systemevents/10.0.0-preview.1.25080.5/microsoft.win32.systemevents.10.0.0-preview.1.25080.5.nupkg.sha512",
+    "/Users/gl.krutoimail.ru/.nuget/packages/system.drawing.common/10.0.0-preview.1.25080.3/system.drawing.common.10.0.0-preview.1.25080.3.nupkg.sha512"
+  ],
   "logs": []
 }
