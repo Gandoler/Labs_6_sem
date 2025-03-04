@@ -15,8 +15,7 @@ namespace SHIFR_lab2
 
         public static Recipient Instance => instance;
         private Recipient() { }
-
-        // Генерация простого числа в заданном диапазоне
+        
         private int GeneratePrime(int min, int max)
         {
             Random rnd = new Random();
@@ -27,8 +26,6 @@ namespace SHIFR_lab2
             }
         }
 
-
-        // Проверка, является ли число простым
         private bool IsPrime(int num)
         {
             if (num < 2) return false;
@@ -40,21 +37,9 @@ namespace SHIFR_lab2
             return true;
         }
 
-        // Метод для получения простых делителей числа
-        private void GetSimpleDivisors(int num, List<int> result)
-        {
-            for (int i = 2; i * i <= num; i++)
-            {
-                while (num % i == 0)
-                {
-                    result.Add(i);
-                    num /= i;
-                }
-            }
-            if (num > 1) result.Add(num);
-        }
+        
 
-        // Нахождение НОД (алгоритм Евклида)
+   
         private int GCD(int a, int b)
         {
             while (b != 0)
@@ -66,10 +51,10 @@ namespace SHIFR_lab2
             return a;
         }
 
-        // Выбор e — должно быть взаимно простым с φ(n)
+      
         private int GetE()
         {
-            // Перебираем кандидатов начиная с 3 (обычно e не равен 2)
+          
             for (int i = 3; i < phie; i += 2)
             {
                 if (GCD(i, phie) == 1)
@@ -78,59 +63,54 @@ namespace SHIFR_lab2
             return -1;
         }
 
-        // Нахождение d — обратного элемента e по модулю φ(n) с помощью расширенного алгоритма Евклида
         private int GetD()
         {
-            int d, y;
-            ExtendedEuclidean(e, phie, out d, out y);
-            if (d < 0) d += phie; // Делаем d положительным
-            return d;
-        }
-
-        // Расширенный алгоритм Евклида
-        private void ExtendedEuclidean(int a, int b, out int x, out int y)
-        {
-            if (b == 0)
+            int d = 0, x1 = 0, x2 = 1, y1 = 1, tempPhie = phie, tempE = e;
+            while (tempE > 0)
             {
-                x = 1;
-                y = 0;
-                return;
+                int temp = tempPhie / tempE;
+                int remainder = tempPhie % tempE;
+                tempPhie = tempE;
+                tempE = remainder;
+                int x = x2 - temp * x1;
+                x2 = x1;
+                x1 = x;
+                int y = d - temp * y1;
+                d = y1;
+                y1 = y;
             }
-
-            int x1, y1;
-            ExtendedEuclidean(b, a % b, out x1, out y1);
-            x = y1;
-            y = x1 - (a / b) * y1;
+            if (tempPhie == 1)
+                return d + (d < 0 ? phie : 0); // Убедимся, что d > 0
+            throw new Exception("Ошибка при вычислении d.");
         }
 
-        // Быстрое возведение в степень по модулю
-        private int ModularExponentiation(int baseNum, int exp, int mod)
+        private static int ModularExponentiation(int baseNum, int exp, int mod)
         {
             int result = 1;
             baseNum = baseNum % mod;
 
             while (exp > 0)
             {
-                if ((exp & 1) == 1)
+                if ((exp & 1) == 1) 
                     result = (result * baseNum) % mod;
-                exp = exp >> 1;
+
+                exp = exp >> 1; 
                 baseNum = (baseNum * baseNum) % mod;
             }
+
             return result;
         }
-
-        // Метод дешифрования одного символа (принимает строковое представление числа)
+        
         private char UnshifrChar(string s, int d)
         {
             int num = Convert.ToInt32(s);
-            int decrypted = ModularExponentiation(num, d, n);
-            return (char)decrypted;
+            return (char)ModularExponentiation(num, d, this.n);
         }
 
-        // Генерация публичного ключа (e, n) получателя
+
         public (int, int) GetPublicKeyFromRecipient()
         {
-            p = GeneratePrime(50, 200); // Генерируем p и q в диапазоне 50–200
+            p = GeneratePrime(50, 200); 
             q = GeneratePrime(50, 200);
             n = p * q;
             phie = (p - 1) * (q - 1);
@@ -140,7 +120,7 @@ namespace SHIFR_lab2
             return (e, n);
         }
 
-        // Метод расшифровки зашифрованного сообщения
+  
         public void ReadShifredMail(string mail_shfr)
         {
             int d = GetD();
@@ -148,7 +128,7 @@ namespace SHIFR_lab2
                 throw new Exception("Ошибка: не удалось вычислить d.");
 
             StringBuilder unshifredMail = new StringBuilder();
-            // Используем RemoveEmptyEntries, чтобы убрать пустые элементы
+            
             foreach (var token in mail_shfr.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
             {
                 unshifredMail.Append(UnshifrChar(token, d));

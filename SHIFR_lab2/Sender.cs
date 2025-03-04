@@ -11,20 +11,13 @@ public static class Sender
         return ModularExponentiation(Convert.ToInt32(c), e, n);
     }
 
-    // Функция для шифрования строки
     public static string ShifrMessage(string msg)
     {
         (int e, int n) publicKey = Recipient.Instance.GetPublicKeyFromRecipient();
-
-        StringBuilder shifrdString = new StringBuilder();
-        foreach (var VARIABLE in msg)
-        {
-            shifrdString.Append(ShifrChar(VARIABLE, publicKey.e, publicKey.n) + ", ");
-        }
-        return shifrdString.ToString();
+        return string.Join(", ", msg.Select(c => ShifrChar(c, publicKey.e, publicKey.n)));
     }
 
-    // Быстрое возведение в степень по модулю (ускоряет шифрование)
+ 
     private static int ModularExponentiation(int baseNum, int exp, int mod)
     {
         int result = 1;
@@ -32,10 +25,10 @@ public static class Sender
 
         while (exp > 0)
         {
-            if ((exp & 1) == 1) // Если exp нечетное
+            if ((exp & 1) == 1) 
                 result = (result * baseNum) % mod;
 
-            exp = exp >> 1; // exp /= 2
+            exp = exp >> 1; 
             baseNum = (baseNum * baseNum) % mod;
         }
 
