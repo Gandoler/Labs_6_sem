@@ -1,4 +1,6 @@
-﻿public static class Program
+﻿using SHIFR_lab3;
+
+public static class Program
 {
 
 
@@ -6,7 +8,12 @@
     public static void Main()
     {
         
-        Console.WriteLine("Hello World!");
+        string inputImage = "input.bmp";
+        string outputImage = "output.bmp";
+        string message = "Hello, world!";
+
+        LSBSteganography.Instance.HideMessage(inputImage, message, outputImage);
+        LSBSteganography.Instance.ExtractMessage(outputImage);
     }
     
 }
