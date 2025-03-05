@@ -73,7 +73,6 @@ public class Blowfish
         return ((ulong)left << 32) | right;
     }
 
-    // Прямое дешифрование сообщения в виде блоков ulong
     public ulong[] DecryptMessage(ulong[] msg)
     {
         ulong[] decrypted = new ulong[msg.Length];
