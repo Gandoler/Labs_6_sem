@@ -13,3 +13,11 @@
 /Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/obj/Debug/net9.0/SHIFR_lab3.pdb
 /Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/obj/Debug/net9.0/SHIFR_lab3.genruntimeconfig.cache
 /Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/obj/Debug/net9.0/ref/SHIFR_lab3.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/bin/Debug/net9.0/Microsoft.Win32.SystemEvents.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/bin/Debug/net9.0/System.Drawing.Common.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/bin/Debug/net9.0/System.Private.Windows.Core.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/bin/Debug/net9.0/System.Private.Windows.GdiPlus.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/bin/Debug/net9.0/runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/obj/Debug/net9.0/SHIFR_lab3.csproj.AssemblyReference.cache
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/obj/Debug/net9.0/SHIFR_lab3.csproj.Up2Date
+/Users/gl.krutoimail.ru/RiderProjects/Labs_6_sem/SHIFR_lab3/bin/Debug/net9.0/SixLabors.ImageSharp.dll

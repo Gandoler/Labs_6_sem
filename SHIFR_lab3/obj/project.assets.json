@@ -24,6 +24,22 @@
           }
         }
       },
+      "SixLabors.ImageSharp/3.1.6": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/SixLabors.ImageSharp.props": {}
+        }
+      },
       "System.Drawing.Common/10.0.0-preview.1.25080.3": {
         "type": "package",
         "dependencies": {
@@ -94,6 +110,22 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "SixLabors.ImageSharp/3.1.6": {
+      "sha512": "dHQ5jugF9v+5/LCVHCWVzaaIL6WOehqJy6eju/0VFYFPEj2WtqkGPoEV9EVQP83dHsdoqYaTuWpZdwAd37UwfA==",
+      "type": "package",
+      "path": "sixlabors.imagesharp/3.1.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "build/SixLabors.ImageSharp.props",
+        "lib/net6.0/SixLabors.ImageSharp.dll",
+        "lib/net6.0/SixLabors.ImageSharp.xml",
+        "sixlabors.imagesharp.128.png",
+        "sixlabors.imagesharp.3.1.6.nupkg.sha512",
+        "sixlabors.imagesharp.nuspec"
+      ]
+    },
     "System.Drawing.Common/10.0.0-preview.1.25080.3": {
       "sha512": "YVKpms8SaTmHucvMZ8IovsF4cQEyUOF9fhDY2kPrs/NIYkrldGa0WYlZmVcMq8h0/35hubNl66dqWqZOLJcB4g==",
       "type": "package",
@@ -150,6 +182,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "SixLabors.ImageSharp >= 3.1.6",
       "System.Drawing.Common >= 10.0.0-preview.1.25080.3"
     ]
   },
@@ -197,6 +230,10 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "SixLabors.ImageSharp": {
+            "target": "Package",
+            "version": "[3.1.6, )"
+          },
           "System.Drawing.Common": {
             "target": "Package",
             "version": "[10.0.0-preview.1.25080.3, )"

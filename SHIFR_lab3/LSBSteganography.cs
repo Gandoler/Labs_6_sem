@@ -5,7 +5,8 @@ namespace SHIFR_lab3;
 
 public class LSBSteganography
 {
-    
+    const int HEADER_SIZE = 54; // Размер заголовка BMP
+
     private static LSBSteganography _instance = new();
     public static LSBSteganography Instance => _instance;
 
@@ -15,67 +16,75 @@ public class LSBSteganography
     }
     public void HideMessage(string imagePath, string message, string outputPath)
     {
-        
-        
-        Bitmap picture = new Bitmap(imagePath);
-        message += (char)0xFF; // Добавляем маркер конца сообщения
-        byte[] messageBytes = Encoding.ASCII.GetBytes(message);
 
-        int byteIndex = 0;
-        for (int y = 0; y < picture.Height && byteIndex < messageBytes.Length; y++)
+
+        byte[] bmpbytes = File.ReadAllBytes(imagePath);
+        byte[] msgBytes = Encoding.ASCII.GetBytes(message);
+        byte[] Hidemsg = new byte[msgBytes.Length + 1];
+    
+
+        Array.Copy(msgBytes, Hidemsg, msgBytes.Length); 
+        Hidemsg[Hidemsg.Length - 1] = 0xFF;
+
+       
+        if (HEADER_SIZE + Hidemsg.Length * 4 > bmpbytes.Length)
         {
-            for (int x = 0; x < picture.Width && byteIndex < messageBytes.Length; x++)
-            {
-                Color pixel = picture.GetPixel(x, y);
-                byte hideByte = messageBytes[byteIndex++];
-
-                // Вставляем 2 младших бита в каждый цветовой канал (R, G, B, A)
-                byte newR = (byte)((pixel.R & 0xFC) | ((hideByte >> 6) & 0x3));
-                byte newG = (byte)((pixel.G & 0xFC) | ((hideByte >> 4) & 0x3));
-                byte newB = (byte)((pixel.B & 0xFC) | ((hideByte >> 2) & 0x3));
-                byte newA = (byte)((pixel.A & 0xFC) | (hideByte & 0x3));
-
-                picture.SetPixel(x, y, Color.FromArgb(newA, newR, newG, newB));
-            }
+            Console.WriteLine("Ошибка: изображение слишком мало для скрытия сообщения.");
+            return;
         }
 
-        picture.Save(outputPath);
-        picture.Dispose();
-        Console.WriteLine("Сообщение спрятано!");
+        for (int i = 0; i < Hidemsg.Length; i++)
+        {
+            int pixelOffset = HEADER_SIZE + i * 4;
+
+            bmpbytes[pixelOffset] &= 0xFC;
+            bmpbytes[pixelOffset] |= (byte)((Hidemsg[i] >> 6) & 0x03);
+
+            bmpbytes[pixelOffset + 1] &= 0xFC;
+            bmpbytes[pixelOffset + 1] |= (byte)((Hidemsg[i] >> 4) & 0x03);
+
+            bmpbytes[pixelOffset + 2] &= 0xFC;
+            bmpbytes[pixelOffset + 2] |= (byte)((Hidemsg[i] >> 2) & 0x03);
+
+            bmpbytes[pixelOffset + 3] &= 0xFC;
+            bmpbytes[pixelOffset + 3] |= (byte)(Hidemsg[i] & 0x03);
+        }
+
+        File.WriteAllBytes(outputPath, bmpbytes);
+        Console.WriteLine("Сообщение скрыто.");
     }
+
+
     
     
-    public  void ExtractMessage(string imagePath)
+    public void ExtractMessage(string imagePath)
     {
-        Bitmap bmp = new Bitmap(imagePath);
+        byte[] bmpBytes = File.ReadAllBytes(imagePath);
         MemoryStream messageStream = new MemoryStream();
 
-        for (int y = 0; y < bmp.Height; y++)
+        for (int i = 0; HEADER_SIZE + i * 4 < bmpBytes.Length; i++)
         {
-            for (int x = 0; x < bmp.Width; x++)
-            {
-                Color pixel = bmp.GetPixel(x, y);
+            int pixelOffset = HEADER_SIZE + i * 4;
+            byte extractedByte = 0;
 
-                // Достаём 2 младших бита из каждого цветового канала
-                byte hideByte = (byte)(
-                    ((pixel.R & 0x3) << 6) |
-                    ((pixel.G & 0x3) << 4) |
-                    ((pixel.B & 0x3) << 2) |
-                    (pixel.A & 0x3)
-                );
+            extractedByte |= (byte)((bmpBytes[pixelOffset] & 0x03) << 6);
+            extractedByte |= (byte)((bmpBytes[pixelOffset + 1] & 0x03) << 4);
+            extractedByte |= (byte)((bmpBytes[pixelOffset + 2] & 0x03) << 2);
+            extractedByte |= (byte)(bmpBytes[pixelOffset + 3] & 0x03);
 
-                if (hideByte == 0xFF) // Конец сообщения
-                {
-                    string message = Encoding.ASCII.GetString(messageStream.ToArray());
-                    Console.WriteLine("Извлечённое сообщение: " + message);
-                    return;
-                }
+            if (extractedByte == 0xFF)
+                break;
 
-                messageStream.WriteByte(hideByte);
-            }
+            messageStream.WriteByte(extractedByte);
         }
 
-        Console.WriteLine("Сообщение не найдено!");
+        foreach (var VARIABLE in messageStream.ToArray())
+        {
+            Console.Write((char)VARIABLE);
+        }
+        
+        Console.WriteLine("\nСообщение извлечено.");
     }
 
 }
+
