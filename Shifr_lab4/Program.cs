@@ -8,35 +8,29 @@ public static class Program
 
    public static void Main()
     {
-        string key = "qwertywe";
+        string key = "qwertywsfe";
         byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
         Blowfish blow = new Blowfish(BlowfishConstants.P, BlowfishConstants.SBox, keyBytes);
 
         string msg = "smtp server eto ok";
 
-        // Преобразуем строку в ulong массив (каждые 8 байт как отдельный блок)
         ulong[] msgBlocks = StringToBlocks(msg);
 
-        // Шифруем сообщение
         ulong[] encrypted = blow.ShifrMessage(msgBlocks);
 
-        // Выводим зашифрованное сообщение в Base64 (для удобства представления)
         string CryptoMsgBase64 = Convert.ToBase64String(BlocksToByteArray(encrypted));
         Console.WriteLine("Encrypted message (Base64): " + CryptoMsgBase64);
 
-        // Дешифруем сообщение
         ulong[] decrypted = blow.DecryptMessage(encrypted);
 
-        // Преобразуем обратно в строку
         string decryptedMsg = BlocksToString(decrypted);
         Console.WriteLine("Decrypted message: " + decryptedMsg);
     }
 
-    // Преобразуем строку в массив блоков ulong
     private static ulong[] StringToBlocks(string input)
     {
-        int numBlocks = (input.Length + 7) / 8; // Количество блоков по 8 байт
+        int numBlocks = (input.Length + 7) / 8; 
         ulong[] blocks = new ulong[numBlocks];
 
         for (int i = 0; i < numBlocks; i++)
@@ -55,7 +49,7 @@ public static class Program
         return blocks;
     }
 
-    // Преобразуем массив блоков ulong обратно в строку
+  
     private static string BlocksToString(ulong[] blocks)
     {
         StringBuilder sb = new StringBuilder();
@@ -73,7 +67,7 @@ public static class Program
         return sb.ToString();
     }
 
-    // Преобразуем массив блоков ulong в байтовый массив
+  
     private static byte[] BlocksToByteArray(ulong[] blocks)
     {
         byte[] byteArray = new byte[blocks.Length * 8];

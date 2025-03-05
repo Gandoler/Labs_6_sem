@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SHIFR_lab2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+81e773af025c1e5b4439507d5a1a5e3bc937d0a5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+807a687de22f3100c20190e9e6843892959e27ea")]
 [assembly: System.Reflection.AssemblyProductAttribute("SHIFR_lab2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SHIFR_lab2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
