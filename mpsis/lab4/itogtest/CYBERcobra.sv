@@ -25,7 +25,7 @@ logic alu_flag_w;
     
     );
     
-    fulladder32 pc_adder(
+    adder32 pc_adder(
     
     .a_i(pc_o_w),
     .b_i(sum_b_w),
@@ -35,7 +35,7 @@ logic alu_flag_w;
     );
     
     
-    rf_riscv regfile(
+    register_file regfile(
     
     .clk_i(clk_i),
     .write_enable_i(!(reg_instr_out_w[31] || reg_instr_out_w[30])),
@@ -48,7 +48,7 @@ logic alu_flag_w;
     
     ); 
                
-    alu_riscv alu(
+    alu alu(
     
     .a_i(rd1_w),
     .b_i(rd2_w),
