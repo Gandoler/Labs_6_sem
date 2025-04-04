@@ -79,6 +79,7 @@ class Program
         Console.WriteLine($"Секретный ключ Боба: {secretKeyBob}");
         Console.WriteLine($"Открытый ключ Алисы: {A}");
         Console.WriteLine($"Открытый ключ Алисы: {B}");
+        
     }
 
 

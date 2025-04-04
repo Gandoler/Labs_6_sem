@@ -30,13 +30,14 @@ public static class PrimitiveRoots
     {
         HashSet<BigInteger> remainders = new HashSet<BigInteger>();
 
-        for (BigInteger i = 1; i < p - 1; i++)
+        // Перебираем степени от 1 до p-1 и собираем остатки от деления a^i mod p
+        for (BigInteger i = 1; i < p; i++)
         {
             remainders.Add(BigInteger.ModPow(a, i, p));
         }
 
+        // Если количество уникальных остатков равно p-1, то это первообразный корень
         return remainders.Count == (int)(p - 1);
     }
-
     
 }
