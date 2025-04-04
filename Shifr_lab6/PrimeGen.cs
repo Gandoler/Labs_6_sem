@@ -1,75 +1,90 @@
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace Shifr_lab6;
 
-public class PrimeGen
+public static class PrimeGen
 {
-    public static bool IsProbablyPrime(BigInteger number, int iterations)
+    public static BigInteger RandomBigInteger(BigInteger min, BigInteger max)
     {
-        if (number < 2) return false;
-        if (number == 2 || number == 3) return true;
-        if (number % 2 == 0) return false;
-
-        BigInteger d = number - 1;
+        byte[] bytes = max.ToByteArray();
+        BigInteger num;
+        do
+        {
+            new Random().NextBytes(bytes);
+            num = new BigInteger(bytes);
+        } while (num < min || num >= max);
+        return num;
+    }
+    
+    
+    public static bool IsProbablePrime(this BigInteger value, int certainty)
+    {
+        if (value < 2) return false;
+        if (value % 2 == 0) return value == 2;
+        BigInteger d = value - 1;
         int s = 0;
         while (d % 2 == 0)
         {
             d /= 2;
             s++;
         }
-
-        for (int i = 0; i < iterations; i++)
+        Random rng = new Random();
+        for (int i = 0; i < certainty; i++)
         {
-            BigInteger a = GenerateRandomBigInteger((int)Math.Log((double)number, 2));
-            if (Witness(a, number, d, s)) return false;
+            BigInteger a = RandomBigInteger(2, value - 2);
+            BigInteger x = BigInteger.ModPow(a, d, value);
+            if (x == 1 || x == value - 1) continue;
+            for (int r = 1; r < s; r++)
+            {
+                x = BigInteger.ModPow(x, 2, value);
+                if (x == 1) return false;
+                if (x == value - 1) break;
+            }
+            if (x != value - 1) return false;
         }
         return true;
     }
-    
-    public static bool Witness(BigInteger a, BigInteger n, BigInteger d, int s)
+    public static BigInteger GeneratePrime(int bitLength)
     {
-        BigInteger x = BigInteger.ModPow(a, d, n);
-        if (x == 1 || x == n - 1) return false;
-
-        for (int r = 1; r < s; r++)
+        using (var rng = new RNGCryptoServiceProvider())
         {
-            x = BigInteger.ModPow(x, 2, n);
-            if (x == n - 1) return false;
+            byte[] bytes = new byte[bitLength / 8];
+            BigInteger num;
+            do
+            {
+                rng.GetBytes(bytes);
+                bytes[bytes.Length - 1] |= 0x01;
+                num = new BigInteger(bytes);
+            } while (!num.IsProbablePrime(10));
+            return num;
         }
-        return true;
     }
-    
-    public static BigInteger GeneratePrimesInRange(BigInteger upper)
+
+    public static BigInteger GenerateGenerator(BigInteger p)
     {
-        for (BigInteger i = upper; i >=0; i--)
+        return RandomBigInteger(2, p - 1);
+    }
+
+    
+
+    public static BigInteger ModInverse(BigInteger a, BigInteger m)
+    {
+        BigInteger m0 = m, t, q;
+        BigInteger x0 = 0, x1 = 1;
+        if (m == 1) return 0;
+        while (a > 1)
         {
-            if (IsProbablyPrime(i, 10)) 
-                return i;
+            q = a / m;
+            t = m;
+            m = a % m;
+            a = t;
+            t = x0;
+            x0 = x1 - q * x0;
+            x1 = t;
         }
-       throw new Exception("не сгенерировалось");
+        if (x1 < 0) x1 += m0;
+        return x1;
     }
-    public static BigInteger GenerateRandomBigInteger(int bitLength)
-    {
-        Random random = new Random();
-        byte[] bytes = new byte[(bitLength + 7) / 8]; // Байты для хранения числа
-        random.NextBytes(bytes);
 
-        // Устанавливаем старший бит (чтобы число было n-битным)
-        bytes[bytes.Length - 1] |= (byte)(1 << ((bitLength - 1) % 8));
-
-        // Устанавливаем младший бит (чтобы число было нечётным)
-        bytes[0] |= 1;
-
-        return new BigInteger(bytes);
-    }
-    
-    public static BigInteger GenerateRandomPrime(int bitLength)
-    {
-        BigInteger prime;
-        do
-        {
-            prime = GenerateRandomBigInteger(bitLength);
-        } while (!IsProbablyPrime(prime, 10));
-        return prime;
-    }
 }
