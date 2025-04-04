@@ -13,7 +13,7 @@ public static class Program
 
         Blowfish blow = new Blowfish(BlowfishConstants.P, BlowfishConstants.SBox, keyBytes);
 
-        string msg = "smtp server eto ok";
+        string msg = "privenijinjnjt";
 
         ulong[] msgBlocks = StringToBlocks(msg);
 

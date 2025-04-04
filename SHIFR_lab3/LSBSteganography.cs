@@ -77,9 +77,10 @@ public class LSBSteganography
 
             messageStream.WriteByte(extractedByte);
         }
-
+        Console.WriteLine("\n\nвыход");
         foreach (var VARIABLE in messageStream.ToArray())
         {
+            
             Console.Write((char)VARIABLE);
         }
         
