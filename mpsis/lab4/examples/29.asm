@@ -48,5 +48,11 @@
 //J  B  WS  ALUOp   RA1     RA2      comand_const   WA
  0  0  01  00101   00001   00110    00000000       00001 // reg[1] =  reg[1]>>1(reg[6])                                                           вывод  (reg[1]) - a
 
+//J  B  WS  ALUOp   RA1     RA2      comand_const   WA
+ 0  0  01  00001   00111   00100    00000000       00111 // reg[7] = reg[7] << reg[4] - сдвигаем на текущую позицию                                       вывод  reg[1]) - a
+
+
+
+
 
 
