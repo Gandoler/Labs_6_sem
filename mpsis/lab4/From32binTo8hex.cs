@@ -10,9 +10,10 @@ class Program
 
         while (true)
         {
-            string? line = Console.ReadLine();
+            string? line = Console.ReadLine().Trim(' ');
             if (string.IsNullOrWhiteSpace(line))
                 break;
+            line = new string(line.Where(c => !char.IsWhiteSpace(c)).ToArray());
 
             binaries.Add(line);
         }
