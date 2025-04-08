@@ -61,7 +61,7 @@
 
 
 //if
-/J  B  WS  ALUOp   RA1     RA2      offset         comand_const
+//J  B  WS  ALUOp   RA1     RA2      offset         comand_const
  0  1  01  11001   00001   01010    11111101       00000 // сравниваем a и 0 если a!=0 прыгаем обратно на команду получения правых 3 бит a        вывод reg[1]
 
 // если нет 
