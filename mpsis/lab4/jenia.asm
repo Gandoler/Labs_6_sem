@@ -1,35 +1,35 @@
 ; jenek 28 variant
-;J  B  WS  const                                   WR
+;J  B  WS  const                                   WA
  0  0  00  00000000000000000000001                 00001  ; reg[1] = a записываем константу в регист 1
 
-;J  B  WS  const                                   WR
+;J  B  WS  const                                   WA
  0  0  00  00000000000000000001000                 00101  ; reg[5] = 8 записываем константу в регист 4 для сдвигов
 
-;J  B  WS  comand_const                            WR
+;J  B  WS  comand_const                            WA
  0  0  10  00000000000000000000000                 00010  ;reg[2] = sw_i записали со входа
 
-;J  B  WS  ALUOp   RA1     RA2      comand_const   WR
+;J  B  WS  ALUOp   RA1     RA2      comand_const   WA
  0  0  01  00101   00010   00101    00000          00011 ;reg[3] = сдвинули на 8 вправо значение с sw_i и получили d
 
-;J  B  WS  const                                   WR
+;J  B  WS  const                                   WA
  0  0  00  00000000000000011111111                 00101  ; reg[5] = записываем константу - маску в регист 4 для получения n
 
-;J  B  WS  ALUOp   RA1     RA2      comand_const   WR
+;J  B  WS  ALUOp   RA1     RA2      comand_const   WA
  0  0  01  00111   00010   00101    00000          00100 ; reg[4] = сдали sw_i & 00000000000000011111111 - (правые 8 бит) получили n
 
-;J  B  WS  const                                   WR
+;J  B  WS  const                                   WA
  0  0  00  00000000000000000000001                 00101  ; reg[5] = 1 записываем константу в регист 4 для формулы an = a1 + (n-1)*d
 
-;J  B  WS  comand_const                            WR
+;J  B  WS  comand_const                            WA
  0  0  11  00000000000000000000000                 00010  ;reg[2] = 0 блягодяря alu
 
-;J  B  WS  ALUOp   RA1     RA2      comand_const   WR
+;J  B  WS  ALUOp   RA1     RA2      comand_const   WA
  0  0  01  01000   00100   00101    00000000       00100 ; reg[4] = n-1
 
-;J  B  WS  ALUOp   RA1     RA2      comand_const   WR
+;J  B  WS  ALUOp   RA1     RA2      comand_const   WA
  0  0  01  00000   00100   00100    00000000       00100 ; reg[4] = reg[4] + n-1
 
-;J  B  WS  ALUOp   RA1     RA2      comand_const   WR
+;J  B  WS  ALUOp   RA1     RA2      comand_const   WA
  0  0  01  01000   00011   00101    00000000       00011 ; reg[3] = reg[3] - 1
 
 ;J  B  WS  ALUOp   RA1     RA2      offset         WA
