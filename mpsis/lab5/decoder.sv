@@ -60,8 +60,7 @@ always_comb begin
                 LDST_B, LDST_H, LDST_W, LDST_BU, LDST_HU: mem_size_o = funct3;
                 default: illegal_instr_o = 1'b1;
             endcase
-        end
-  //####################################################################################################################################      
+        end 
         OP_IMM_OPCODE, OP_OPCODE: begin
             gpr_we_o = 1'b1;
             alu_op_o = funct3;
@@ -78,7 +77,13 @@ always_comb begin
         end
         
         BRANCH_OPCODE: begin
-            alu_op_o = {funct3 == 3'b000, funct3[2], funct3[1]};
+//        localparam ALU_LTS  = 5'b11100;  // Less Than Signed                      FUNCT3<----100 
+//        localparam ALU_LTU  = 5'b11110;  // Less Than Unsigned                    FUNCT3<----110
+//        localparam ALU_GES  = 5'b11101;  // Great [or] Equal signed               FUNCT3<----101    
+//        localparam ALU_GEU  = 5'b11111;  // Great [or] Equal unsigned             FUNCT3<----111    
+//        localparam ALU_EQ   = 5'b11000;  // Equal                                 FUNCT3<----000
+//        localparam ALU_NE   = 5'b11001;  // Not Equal                             FUNCT3<----001    
+            alu_op_o = {2'b11, funct3};
             branch_o = 1'b1;
         end
         
