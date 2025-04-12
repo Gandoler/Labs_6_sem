@@ -84,14 +84,15 @@ always_comb begin
 //        localparam ALU_EQ   = 5'b11000;  // Equal                                 FUNCT3<----000
 //        localparam ALU_NE   = 5'b11001;  // Not Equal                             FUNCT3<----001    
             alu_op_o = {2'b11, funct3};
-            branch_o = 1'b1;
+            branch_o = 1'b1;    // просто поставить флаг бренча
         end
         
         JALR_OPCODE: begin
-            a_sel_o = 2'd1;
+          // 
+            a_sel_o = 2'd1;    
             b_sel_o = 3'd4; 
-            gpr_we_o = 1'b1;
-            jalr_o = 1'b1;
+            gpr_we_o = 1'b1; //разрешение на записть в регистровый файл
+            jalr_o = 1'b1; // ставим флаг перехода
         end
         
         JAL_OPCODE: begin
