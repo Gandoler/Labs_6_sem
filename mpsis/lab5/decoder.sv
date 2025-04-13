@@ -21,6 +21,10 @@ module decoder (
 //  Для удобства дальнейшего описания модуля, 
 //  рекомендуется сперва создать сигналы opcode, 
 //  func3, func7 и присвоить им соответствующие биты входного сигнала инструкции.
+wire logic [2:0]  funct3 ;
+wire logic [6:0]  funct7;
+wire logic [6:0] opcode;
+
 assign funct3 = fetched_instr_i[14:12];
 assign funct7 = fetched_instr_i[31:25];
 assign opcode = fetched_instr_i[6:0];
