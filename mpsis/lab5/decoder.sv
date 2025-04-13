@@ -50,10 +50,11 @@ always_comb begin
         LOAD_OPCODE, STORE_OPCODE: begin
         //LOAD	00000	Записать в rd данные из памяти по адресу rs1+imm
         //STORE	01000	Записать в память по адресу rs1+imm данные из 
-            mem_req_o = 1'b1;                                           // разрешаем доступ к памяти
-            gpr_we_o = (opcode == LOAD_OPCODE) ? 1'b1 : 1'b0;         
-            wb_sel_o = (opcode == LOAD_OPCODE) ? 2'b01 : wb_sel_o;       
-            mem_we_o = (opcode == STORE_OPCODE) ? 1'b1 : 1'b0;
+            mem_req_o = 1'b1;                                          // разрешаем доступ к памяти
+            gpr_we_o = (opcode == LOAD_OPCODE) ? 1'b1 : 1'b0;          // load : gpr_we_o=1                        // store: gpr_we_o= 0               :::разрешение записи в регистровый файл 
+            wb_sel_o = (opcode == LOAD_OPCODE) ? 2'b01 : wb_sel_o;     // load :   wb_sel_o =  01 => mem_rd_i      // store = 0 => mem_addr_0 =>alu    :::выбор данных, записываемых в регистровый файл
+          
+          mem_we_o = (opcode == STORE_OPCODE) ? 1'b1 : 1'b0;         // load :   mem_we_o =  0      // mem_we_o = 1 
             b_sel_o = (opcode == STORE_OPCODE) ? 3'b101 : 3'b001;
             
             case(funct3)
