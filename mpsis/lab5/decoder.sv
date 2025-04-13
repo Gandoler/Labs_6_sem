@@ -52,7 +52,7 @@ always_comb begin
         //STORE	01000	Записать в память по адресу rs1+imm данные из 
             mem_req_o = 1'b1;                                          // разрешаем доступ к памяти
             gpr_we_o = (opcode == LOAD_OPCODE) ? 1'b1 : 1'b0;          // load : gpr_we_o=1                        // store: gpr_we_o= 0               :::разрешение записи в регистровый файл 
-            wb_sel_o = (opcode == LOAD_OPCODE) ? 2'b01 : wb_sel_o;     // load :   wb_sel_o =  01                  // store = 0                        :::выбор данных, записываемых в регистровый файл  
+            wb_sel_o = (opcode == LOAD_OPCODE) ? 2'b01 : wb_sel_o;     // load :   wb_sel_o =  01                  // wb_sel_o = 00:default                        :::выбор данных, записываемых в регистровый файл  
             mem_we_o = (opcode == STORE_OPCODE) ? 1'b1 : 1'b0;         // load :   mem_we_o =  0                   //store: mem_we_o = 1               :::разрешения записи в память
             b_sel_o = (opcode == STORE_OPCODE) ? 3'b101 : 3'b001;      // load :   b_sel_o =  001                  //store: b_sel_o =  b101            :::выбора второго операнда АЛУ	
             
@@ -61,9 +61,18 @@ always_comb begin
                 default: illegal_instr_o = 1'b1;                                  // иначе ошибка операции 
             endcase
         end 
-                                 //итого
-//
- 
+                                                                                     //итого
+//store:
+//  mem_req_o = 1'b1;
+//  gpr_we_o= 0;
+//  wb_sel_o = 00:default;
+//  mem_we_o = 1; 
+//  b_sel_o =  b101; 
+//     ::DEFAULT::
+//    alu_op_o = ALU_ADD;
+//    a_sel_o = 2'd0; 
+//    mem_size_o = 3'd0;  
+
 //#####################################################################################################################################################################################################
 
       
