@@ -85,6 +85,7 @@ STORE_OPCODE: begin
           gpr_we_o = 1;
           wb_sel_o = 1;
           b_sel_o = OP_B_IMM_I;
+          alu_op_o = 0; //тут ноль должен быть
           case(funct3)
                 LDST_B, LDST_H, LDST_W, LDST_BU, LDST_HU: mem_size_o = funct3;    // проверка на соответсвия командам размера 
           default: begin illegal_instr_o = 1; mem_req_o = 0; gpr_we_o = 0; end    // иначе ошибка операции  запрет на изменения
