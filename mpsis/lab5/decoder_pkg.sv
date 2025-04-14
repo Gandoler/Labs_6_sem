@@ -15,17 +15,17 @@ package decoder_pkg;
 
   // opcodes
  // opcodes
-  localparam LOAD_OPCODE     = 5'b00_00011;
-  localparam MISC_MEM_OPCODE = 5'b00_01111;
-  localparam OP_IMM_OPCODE   = 5'b00_10011;
-  localparam AUIPC_OPCODE    = 5'b00_10111;
-  localparam STORE_OPCODE    = 5'b01_00011;
-  localparam OP_OPCODE       = 5'b01_10011;
-  localparam LUI_OPCODE      = 5'b01_10111;
-  localparam BRANCH_OPCODE   = 5'b11_00011;
-  localparam JALR_OPCODE     = 5'b11_00111;
-  localparam JAL_OPCODE      = 5'b11_01111;
-  localparam SYSTEM_OPCODE   = 5'b11_10011;
+  localparam LOAD_OPCODE     = 5'b00_000;
+  localparam MISC_MEM_OPCODE = 5'b00_011;
+  localparam OP_IMM_OPCODE   = 5'b00_100;
+  localparam AUIPC_OPCODE    = 5'b00_101;
+  localparam STORE_OPCODE    = 5'b01_000;
+  localparam OP_OPCODE       = 5'b01_100;
+  localparam LUI_OPCODE      = 5'b01_101;
+  localparam BRANCH_OPCODE   = 5'b11_000;
+  localparam JALR_OPCODE     = 5'b11_001;
+  localparam JAL_OPCODE      = 5'b11_011;
+  localparam SYSTEM_OPCODE   = 5'b11_100;
 
   // dmem type load store
   localparam LDST_B          = 3'b000;
