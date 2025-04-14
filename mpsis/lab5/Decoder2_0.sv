@@ -296,8 +296,31 @@ STORE_OPCODE: begin
 //  b_sel_o = 3'd0;                                         7.  b_sel_o = 3'd0 => данные с RD2 - находящегося по адрессу [24:20] из инструкции
       // то есть мы берем данные с первого регистра и второго реистр по адрессу из инструкции делаем операцию переданую по алуоп и записываем в регистрный файл по адрессу [11:7]
 //#####################################################################################################################################################################################################
-
-      
+  SYSTEM_OPCODE: begin
+            case(fetched_instr_i[14:12])
+              3'b000: begin
+                case(fetched_instr_i[31:25])
+                  7'b000_0000: begin illegal_instr_o = 1'd1; gpr_we_o = 1'd0; end
+                  7'b000_0001: begin illegal_instr_o = 1'd1; gpr_we_o = 1'd0; end
+                  default:
+                    case(fetched_instr_i[31:0])
+                      32'b00110000001000000000000001110011: mret_o = 1'd1;
+                      default: illegal_instr_o = 1'd1;
+                    endcase
+                endcase
+              end
+              CSR_RW,CSR_RS,CSR_RS,CSR_RS,CSR_RSI,CSR_RCI: begin
+                gpr_we_o = 1'd1;
+                wb_sel_o = WB_CSR_DATA;
+                csr_we_o = 1'd1;
+                csr_op_o = fetched_instr_i[14:12];
+                end
+              default: begin illegal_instr_o = 1'd1;gpr_we_o = 1'd0; end
+            endcase
+          end
+          default: begin illegal_instr_o = 1'd1;gpr_we_o = 1'd0; end
+        endcase
+      end
 end
 endmodule
 
