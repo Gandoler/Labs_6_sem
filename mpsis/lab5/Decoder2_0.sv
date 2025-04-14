@@ -23,11 +23,11 @@ module mega_decoder (
 //  func3, func7 и присвоить им соответствующие биты входного сигнала инструкции.
  logic [2:0]  funct3 ;
  logic [6:0]  funct7;
- logic [6:0] opcode;
+ logic [4:0] opcode;
 
 assign funct3 = fetched_instr_i[14:12];
 assign funct7 = fetched_instr_i[31:25];
-assign opcode = fetched_instr_i[6:0];
+assign opcode = fetched_instr_i[6:2];
 
   always_comb begin   
      //Определение значение по умолчанию
@@ -110,8 +110,8 @@ STORE_OPCODE: begin
 //        localparam ALU_EQ   = 5'b11000;  // Equal                                 FUNCT3<----000
 //        localparam ALU_NE   = 5'b11001;  // Not Equal                             FUNCT3<----001    
             branch_o = 1'b1;  
-            case(funct3)
-                ALU_EQ, ALU_NE, ALU_LTS, ALU_GES, ALU_LTU, ALU_GEU: mem_size_o = funct3;    // что бы лишние команды не засосало
+            case({2'b11,funct3})
+                ALU_EQ, ALU_NE, ALU_LTS, ALU_GES, ALU_LTU, ALU_GEU: mem_size_o = {2'b11,funct3};    // что бы лишние команды не засосало
                 default: begin  illegal_instr_o = 1; branch_o = 0; end   // иначе ошибка операции  запрет на изменения и отмена бренча
             endcase
             alu_op_o = {2'b11, funct3};   
@@ -233,19 +233,25 @@ STORE_OPCODE: begin
           gpr_we_o = 1;
 
           //fetched_instr_i[31:25] - func7, fetched_instr_i[14:12] - func3 
-          case({funct7, funct3})
-            10'h00_0 : alu_op_o = ALU_ADD;
-            10'h00_1 : alu_op_o = ALU_SLL;
-            10'h00_2 : alu_op_o = ALU_SLTS;
-            10'h00_3 : alu_op_o = ALU_SLTU;
-            10'h00_4 : alu_op_o = ALU_XOR;
-            10'h00_5 : alu_op_o = ALU_SRL;
-            10'h00_6 : alu_op_o = ALU_OR;
-            10'h00_7 : alu_op_o = ALU_AND;
-
-            10'h20_0 : alu_op_o = ALU_SUB;
-            10'h20_5 : alu_op_o = ALU_SRA;
-
+          case(funct3)
+                3'b000 : case(funct7)
+                        7'b0100000 : alu_op_o = ALU_SUB;
+                        7'b0000000 : alu_op_o = ALU_ADD;
+                         default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+                         endcase
+                         
+                 
+                3'b001: alu_op_o = ALU_SLL;
+                3'b010: alu_op_o = ALU_SLTS;
+                3'b011: alu_op_o = ALU_SLTU;
+                3'b100: alu_op_o = ALU_XOR;
+                3'b101:  case(funct7)
+                        7'b0100000 : alu_op_o = ALU_SRA;
+                        7'b0000000 : alu_op_o = ALU_SRL;
+                         default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+                         endcase
+                3'b110: alu_op_o = ALU_OR;
+                3'b111: alu_op_o = ALU_AND;
             //В случаи некорректной команды запрещаем запись
             //в регистровый файл и выставляем флаг illegal_instr_o 
             default: begin illegal_instr_o = 1; gpr_we_o = 0; end
@@ -266,20 +272,19 @@ STORE_OPCODE: begin
                 3'b101: case(funct7)
                        7'b0: alu_op_o = ALU_SRL;
                         7'b0100000: alu_op_o = ALU_SRA;
-            default: begin illegal_instr_o = 1; gpr_we_o = 0; end
-            endcase
+          
+                default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+                endcase
+                3'd0 : alu_op_o = ALU_ADD;
+                3'd2 : alu_op_o = ALU_SLTS;
+                3'd3 : alu_op_o = ALU_SLTU;
+                3'd4 : alu_op_o = ALU_XOR;
+                3'd6 : alu_op_o = ALU_OR;
+                3'd7 : alu_op_o = ALU_AND;
           default: begin illegal_instr_o = 1; gpr_we_o = 0; end
           endcase
 
-          case(funct3)
-            3'd0 : alu_op_o = ALU_ADD;
-            3'd2 : alu_op_o = ALU_SLTS;
-            3'd3 : alu_op_o = ALU_SLTU;
-            3'd4 : alu_op_o = ALU_XOR;
-            3'd6 : alu_op_o = ALU_OR;
-            3'd7 : alu_op_o = ALU_AND;
-            default : begin illegal_instr_o = 1; gpr_we_o = 0; end
-          endcase
+          
         end
 //#####################################################################################################################################################################################################
 //                                                          OP	01100	Записать в rd результат вычисления АЛУ над rs1 и rs2
@@ -306,7 +311,7 @@ STORE_OPCODE: begin
                     endcase
                 endcase
               end
-              CSR_RW,CSR_RS,CSR_RS,CSR_RS,CSR_RSI,CSR_RCI: begin
+              CSR_RW,CSR_RS, CSR_RC, CSR_RWI, CSR_RSI, CSR_RCI: begin
                 gpr_we_o = 1'd1;
                 wb_sel_o = WB_CSR_DATA;
                 csr_we_o = 1'd1;
