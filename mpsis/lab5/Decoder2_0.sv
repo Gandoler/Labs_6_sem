@@ -21,9 +21,9 @@ module mega_decoder (
 //  Для удобства дальнейшего описания модуля, 
 //  рекомендуется сперва создать сигналы opcode, 
 //  func3, func7 и присвоить им соответствующие биты входного сигнала инструкции.
-wire logic [2:0]  funct3 ;
-wire logic [6:0]  funct7;
-wire logic [6:0] opcode;
+ logic [2:0]  funct3 ;
+ logic [6:0]  funct7;
+ logic [6:0] opcode;
 
 assign funct3 = fetched_instr_i[14:12];
 assign funct7 = fetched_instr_i[31:25];
@@ -51,7 +51,7 @@ assign opcode = fetched_instr_i[6:0];
     b_sel_o = 3'd0;             //Управляющий сигнал мультиплексора для выбора второго операнда АЛУ	
     mem_size_o = 3'd0;          //Управляющий сигнал для выбора размера слова при чтении-записи в память (часть интерфейса памяти)
  //Проверка на то что 2 младших бита opcode равны '11'
-    if(fetched_instr_i[1:0]) begin
+    if(fetched_instr_i[1:0] == 2'b11) begin
  //#####################################################################################################################################################################################################
     case (opcode)
 //#####################################################################################################################################################################################################
@@ -261,11 +261,14 @@ STORE_OPCODE: begin
           b_sel_o = OP_B_IMM_I;
           
           //case для сдвигов на константную величину 
-          case({funct7, funct3})
-            10'h00_1 : alu_op_o = ALU_SLL;
-            10'h00_5 : alu_op_o = ALU_SRL;
-            10'h20_5 : alu_op_o = ALU_SRA;
+          case(funct3)
+               3'b001: alu_op_o = ALU_SLL;
+                3'b101: case(funct7)
+                       7'b0: alu_op_o = ALU_SRL;
+                        7'b0100000: alu_op_o = ALU_SRA;
             default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+            endcase
+          default: begin illegal_instr_o = 1; gpr_we_o = 0; end
           endcase
 
           case(funct3)
@@ -320,5 +323,4 @@ STORE_OPCODE: begin
     end
     end
 endmodule
-
 
