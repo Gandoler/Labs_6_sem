@@ -78,7 +78,37 @@ module processor_core (
   logic [31:0] jal_mult;
   logic [31:0] branch_mult;
 //#########################################################################
+//   получение значений с команд и суматоров
+    //assign sum = RD1 + SE_imm_I; // самый 
+    // Модуль сумматора 
+  adder32 pc_adder(
+    .a_i(RD1),                  
+    .b_i(SE_imm_I),                  
+    .sum_o(sum),                
+    .carry_i('0)                     // Вход переноса (не используется здесь)
+  );
 
+  assign sum_const = { sum[31:1], 1'b0 }; // делаем сумму четной
+
+  assign RA1 = instr_i[19:15];   // адресс 1 регистра из инструкции
+  assign RA2 = instr_i[24:20];   // адресс 2 регистра из инструкции
+  assign WA = instr_i[11:7];     // адресс регистра для записи из инструкции
+
+  assign imm_I = instr_i[31:20];                                                                   // константа типа I из инструкции
+  assign imm_U = assign imm_U = { instr_i[31:12], 12'h000 };                                       // константа типа U из инструкции
+  assign imm_S = { instr_i[31:25], instr_i[11:7] };                                                // константа типа S из инструкции
+  assign imm_B = { instr_i[31], instr_i[7], instr_i[30:25], instr_i[11:8], 1'b0 };                 // константа типа B из инструкции
+  assign imm_J = { instr_i[31], instr_i[19:12], instr_i[20], instr_i[30:21], 1'b0 };               // константа типа J из инструкции
+  assign imm_Z = instr_i[19:15];                                                                   // константа типа Z из инструкции
+
+  assign SE_imm_I = { {20{imm_I[11]}}, imm_I };   // Знаковое расширение до 32 бит 
+  assign SE_imm_S = { {20{imm_S[11]}}, imm_S };  // Знаковое расширение до 32 бит 
+  assign SE_imm_B = { {19{imm_B[12]}}, imm_B };  // Знаковое расширение до 32 бит 
+  assign SE_imm_J = { {11{imm_J[20]}}, imm_J };  // Знаковое расширение до 32 бит 
+  assign ZE_imm_Z = { 27'd0, imm_Z};
+
+
+  assign WE = gpr_we && stall_i
 
 
 
