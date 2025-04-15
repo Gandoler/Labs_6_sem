@@ -13,6 +13,11 @@ module processor_core (
   output logic        mem_we_o,
   output logic [31:0] mem_wd_o
 );
+  // соединение выходов
+  assign instr_addr_o = PC;
+  assign mem_addr_o = result_o;
+  assign mem_wd_o = RD2;
+  
   // консанты для мультиплексторов
   localparam ZERO = 32'd0;
   localparam FOUR = 32'd4;
@@ -76,7 +81,6 @@ module processor_core (
 //   получение значений с команд и суматоров
 //   сумматор RD1 и SE_imm_I ---------------------тот что самый левый
   logic [31:0] sum;
-  logic [31:0] sum_const;
   adder32 pc_adder( // импортозамещение
     .a_i(RD1),                  
     .b_i(SE_imm_I),                  
@@ -84,7 +88,9 @@ module processor_core (
     .carry_i('0)                     // Вход переноса (не используется здесь)
   );
 
-  assign sum_const = { sum[31:1], 1'b0 }; // делаем сумму четной
+  logic [31:0] sum_const;
+  assign sum_const = { sum[31:1], 1'b0 }; // делаем сумму четной 
+  // Обратите внимание, что младший бит этой суммы должен быть обнулен — таково требование спецификации [1, стр. 28].
 //#########################################################################
   assign RA1 = instr_i[19:15];   // адресс 1 регистра из инструкции
   assign RA2 = instr_i[24:20];   // адресс 2 регистра из инструкции
@@ -155,9 +161,9 @@ module processor_core (
   end
 //#########################################################################
 //    сумматор переходов
-  //logic [31:0] summator;
-  assign summator = PC + jal_mult;  // импортозамещение
-   adder32 pc_adder(
+  logic [31:0] summator;
+//    assign summator = PC + jal_mult;  
+   adder32 pc_adder(// импортозамещение
     .a_i(PC),                  
     .b_i(jal_mult),                  
     .sum_o(summator),                
@@ -171,6 +177,58 @@ module processor_core (
       1'b1: sum_for_PC = sum_const;
     endcase
   end
+//#########################################################################
+//  модуль pc
+  always_ff @(posedge clk_i) begin
+    if(rst_i) begin
+      PC <= ZERO;
+    end 
+    else begin
+      if(!stall_i)
+        PC = sum_for_PC;
+      end
+    end
+  end
+//#########################################################################
 
+   //подключение main_decoder
+  mega_decoder decoder(
+    .fetched_instr_i(),
+  .a_sel_o(),
+  .b_sel_o(),
+  .alu_op_o(),
+  .csr_op_o(),
+  .csr_we_o(),
+  .mem_req_o(),
+  .mem_we_o(),
+  .mem_size_o(),
+  .gpr_we_o(),
+  .wb_sel_o(),
+  .illegal_instr_o(),
+  .branch_o(),
+  .jal_o(),
+  .jalr_o(),
+  .mret_o()
+  );
+  
+  // подключение Register_File
+  register_file RF(
+    .clk_i(clk_i),
+    .read_addr1_i(RA1),
+    .read_addr2_i(RA2),
+    .write_addr_i(WA),
+    .write_data_i(wb_data),
+    .read_data1_o(RD1),
+    .read_data2_o(RD2),
+    .write_enable_i(WE)
+  );
 
+  //подключенией ALU
+  alu ALU(
+    .a_i(a_i),
+    .a_i(b_i),
+    .alu_op_i(alu_op),
+    .flag_o(flag),
+    .result_o(result_o)
+  );
 endmodule
