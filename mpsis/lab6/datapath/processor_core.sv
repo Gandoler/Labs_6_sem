@@ -223,7 +223,7 @@ module processor_core (
   //подключенией ALU
   alu ALU(
     .a_i(a_i),
-    .a_i(b_i),
+    .b_i(b_i),
     .alu_op_i(alu_op),
     .flag_o(flag),
     .result_o(result_o)
