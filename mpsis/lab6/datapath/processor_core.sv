@@ -89,7 +89,7 @@ module processor_core (
   );
 
   assign sum_const = { sum[31:1], 1'b0 }; // делаем сумму четной
-
+//#########################################################################
   assign RA1 = instr_i[19:15];   // адресс 1 регистра из инструкции
   assign RA2 = instr_i[24:20];   // адресс 2 регистра из инструкции
   assign WA = instr_i[11:7];     // адресс регистра для записи из инструкции
@@ -107,8 +107,40 @@ module processor_core (
   assign SE_imm_J = { {11{imm_J[20]}}, imm_J };  // Знаковое расширение до 32 бит 
   assign ZE_imm_Z = { 27'd0, imm_Z};
 
-
-  assign WE = gpr_we && stall_i
+//    появился вход stall_i, приостанавливающий обновление программного счётчика.
+  assign WE = gpr_we && stall_i // для остановки
+//#########################################################################
+//    мультиплексор для выбора операнда  a_i
+  always_comb begin
+    case(a_sel)
+      2'd0: a_i = RD1;
+      2'd1: a_i = PC;
+      2'd2: a_i = ZERO;
+      default: a_i = 0;
+    endcase
+  end
+//#########################################################################
+//    мультиплексор для выбора операнда  b_i
+  always_comb begin
+    case(b_sel)
+      3'd0: b_i = RD2;
+      3'd1: b_i = SE_imm_I;
+      3'd2: b_i = imm_U;
+      3'd3: b_i = SE_imm_S;
+      3'd4: b_i = FOUR;
+      default: b_i = 0;
+    endcase
+  end
+//#########################################################################
+//     мультиплексор для wb_data
+  always_comb begin
+    case(wb_sel)
+      2'd0: wb_data = result_o;
+      2'd1: wb_data = mem_rd_i;
+      //2'd2: wb_data = csr_wd;
+      default: wb_data = 0;
+    endcase
+  end
 
 
 
