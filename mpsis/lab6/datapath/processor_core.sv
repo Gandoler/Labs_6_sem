@@ -13,10 +13,7 @@ module processor_core (
   output logic        mem_we_o,
   output logic [31:0] mem_wd_o
 );
-  // соединение выходов
-  assign instr_addr_o = PC;
-  assign mem_addr_o = result_o;
-  assign mem_wd_o = RD2;
+ 
   
   // консанты для мультиплексторов
   localparam ZERO = 32'd0;
@@ -31,24 +28,24 @@ module processor_core (
 
 //######################################################################### 
 //              Декодер
-  logic [31:0]  fetched_instr,//1л
-  logic         branch,//2л
-  logic         jal,//3л
-  logic         jalr,//4л
-  logic         mret,//5л
-  logic         illegal_instr,//6л
-  logic         csr_we,//7л
-  logic [2:0]   csr_op,//8л
   
-  logic [1:0]   a_sel,//1п
-  logic [2:0]   b_sel,//2п
-  logic [4:0]   alu_op,//3п
-  logic [1:0]   wb_sel,//4п
-  logic         mem_we,//5п
-  logic         mem_req,//6п
-  logic [2:0]   mem_size,//7п
+  logic         b;//2л
+  logic         jal;//3л
+  logic         jalr;//4л
+  logic         mret;//5л
+  logic         illegal_instr;//6л
+  logic         csr_we;//7л
+  logic [2:0]   csr_op;//8л
   
-  logic         gpr_we//низ
+  logic [1:0]   a_sel;//1п
+  logic [2:0]   b_sel;//2п
+  logic [4:0]   alu_op;//3п
+  logic [1:0]   wb_sel;//4п
+  logic         mem_we;//5п
+  logic         mem_req;//6п
+  logic [2:0]   mem_size;//7п
+  
+  logic         gpr_we;//низ
 //#########################################################################
 //    связь с регистровым файлом
   logic [4:0]  RA1;
@@ -90,14 +87,14 @@ module processor_core (
 
   logic [31:0] sum_const;
   assign sum_const = { sum[31:1], 1'b0 }; // делаем сумму четной 
-  // Обратите внимание, что младший бит этой суммы должен быть обнулен — таково требование спецификации [1, стр. 28].
+  // Обратите внимание, что младший бит этой суммы должен быть обнулен  таково требование спецификации [1, стр. 28].
 //#########################################################################
   assign RA1 = instr_i[19:15];   // адресс 1 регистра из инструкции
   assign RA2 = instr_i[24:20];   // адресс 2 регистра из инструкции
   assign WA = instr_i[11:7];     // адресс регистра для записи из инструкции
 
   assign imm_I = instr_i[31:20];                                                                   // константа типа I из инструкции
-  assign imm_U = assign imm_U = { instr_i[31:12], 12'h000 };                                       // константа типа U из инструкции
+  assign imm_U = { instr_i[31:12], 12'h000 };                                                      // константа типа U из инструкции
   assign imm_S = { instr_i[31:25], instr_i[11:7] };                                                // константа типа S из инструкции
   assign imm_B = { instr_i[31], instr_i[7], instr_i[30:25], instr_i[11:8], 1'b0 };                 // константа типа B из инструкции
   assign imm_J = { instr_i[31], instr_i[19:12], instr_i[20], instr_i[30:21], 1'b0 };               // константа типа J из инструкции
@@ -110,7 +107,7 @@ module processor_core (
   assign ZE_imm_Z = { 27'd0, imm_Z};
 
 //    появился вход stall_i, приостанавливающий обновление программного счётчика.
-  assign WE = gpr_we && stall_i // для остановки
+  assign WE = gpr_we && stall_i; // для остановки
 //#########################################################################
 //    мультиплексор для выбора операнда  a_i
   always_comb begin
@@ -163,7 +160,7 @@ module processor_core (
 //    сумматор переходов
   logic [31:0] summator;
 //    assign summator = PC + jal_mult;  
-   adder32 pc_adder(// импортозамещение
+   adder32 pc_adder2(// импортозамещение
     .a_i(PC),                  
     .b_i(jal_mult),                  
     .sum_o(summator),                
@@ -188,12 +185,12 @@ module processor_core (
         PC = sum_for_PC;
       end
     end
-  end
+  
 //#########################################################################
 
    //подключение main_decoder
   mega_decoder decoder(
-    .fetched_instr_i(fetched_instr),
+   .fetched_instr_i(instr_i),
   .a_sel_o(a_sel),
   .b_sel_o(b_sel),
   .alu_op_o(alu_op),
@@ -231,4 +228,9 @@ module processor_core (
     .flag_o(flag),
     .result_o(result_o)
   );
+  
+   // соединение выходов
+  assign instr_addr_o = PC;
+  assign mem_addr_o = result_o;
+  assign mem_wd_o = RD2;
 endmodule
