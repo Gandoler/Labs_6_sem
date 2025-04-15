@@ -31,24 +31,24 @@ module processor_core (
 
 //######################################################################### 
 //              Декодер
-  logic [31:0]  fetched_instr_i,//1л
-  logic         branch_o,//2л
-  logic         jal_o,//3л
-  logic         jalr_o,//4л
-  logic         mret_o,//5л
-  logic         illegal_instr_o,//6л
-  logic         csr_we_o,//7л
-  logic [2:0]   csr_op_o,//8л
+  logic [31:0]  fetched_instr,//1л
+  logic         branch,//2л
+  logic         jal,//3л
+  logic         jalr,//4л
+  logic         mret,//5л
+  logic         illegal_instr,//6л
+  logic         csr_we,//7л
+  logic [2:0]   csr_op,//8л
   
-  logic [1:0]   a_sel_o,//1п
-  logic [2:0]   b_sel_o,//2п
-  logic [4:0]   alu_op_o,//3п
-  logic [1:0]   wb_sel_o,//4п
-  logic         mem_we_o,//5п
-  logic         mem_req_o,//6п
-  logic [2:0]   mem_size_o,//7п
+  logic [1:0]   a_sel,//1п
+  logic [2:0]   b_sel,//2п
+  logic [4:0]   alu_op,//3п
+  logic [1:0]   wb_sel,//4п
+  logic         mem_we,//5п
+  logic         mem_req,//6п
+  logic [2:0]   mem_size,//7п
   
-  logic         gpr_we_o//низ
+  logic         gpr_we//низ
 //#########################################################################
 //    связь с регистровым файлом
   logic [4:0]  RA1;
@@ -193,24 +193,24 @@ module processor_core (
 
    //подключение main_decoder
   mega_decoder decoder(
-    .fetched_instr_i(),
-  .a_sel_o(),
-  .b_sel_o(),
-  .alu_op_o(),
-  .csr_op_o(),
-  .csr_we_o(),
-  .mem_req_o(),
-  .mem_we_o(),
-  .mem_size_o(),
-  .gpr_we_o(),
-  .wb_sel_o(),
-  .illegal_instr_o(),
-  .branch_o(),
-  .jal_o(),
-  .jalr_o(),
-  .mret_o()
+    .fetched_instr_i(fetched_instr),
+  .a_sel_o(a_sel),
+  .b_sel_o(b_sel),
+  .alu_op_o(alu_op),
+  .csr_op_o(csr_op),
+  .csr_we_o(csr_we),
+  .mem_req_o(mem_req),
+  .mem_we_o(mem_we),
+  .mem_size_o(mem_size),
+  .gpr_we_o(gpr_we),
+  .wb_sel_o(wb_sel),
+  .illegal_instr_o(illegal_instr),
+  .branch_o(branch),
+  .jal_o(jal),
+  .jalr_o(jalr),
+  .mret_o(mret)
   );
-  
+
   // подключение Register_File
   register_file RF(
     .clk_i(clk_i),
