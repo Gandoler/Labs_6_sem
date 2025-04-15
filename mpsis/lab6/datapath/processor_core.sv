@@ -22,7 +22,7 @@ module processor_core (
   logic [31:0] sum;
   logic [31:0] sum_const;
 
-  //знакорасширения SE или обычного расширения
+  // получаемые константы
   logic [11:0] imm_I;
   logic [11:0] imm_S;
   logic [12:0] imm_B;
@@ -81,7 +81,7 @@ module processor_core (
 //   получение значений с команд и суматоров
     //assign sum = RD1 + SE_imm_I; // самый 
     // Модуль сумматора 
-  adder32 pc_adder(
+  adder32 pc_adder( // импортозамещение
     .a_i(RD1),                  
     .b_i(SE_imm_I),                  
     .sum_o(sum),                
@@ -137,10 +137,36 @@ module processor_core (
     case(wb_sel)
       2'd0: wb_data = result_o;
       2'd1: wb_data = mem_rd_i;
-      //2'd2: wb_data = csr_wd;
+      //2'd2: wb_data = csr_wd; // возможно позже завезут
       default: wb_data = 0;
     endcase
   end
+//#########################################################################
+//     мультиплексор branch
+  always_comb begin
+    case(b)
+      1'b0: branch_mult = SE_imm_J;
+      1'b1: branch_mult = SE_imm_B;
+    endcase
+  end
+//#########################################################################
+//    мультиплексор jal
+  always_comb begin
+    case((flag && b) || jal)
+      1'b0: jal_mult = FOUR;
+      1'b1: jal_mult = branch_mult;
+    endcase
+  end
+//#########################################################################
+//    сумматор переходов
+  //logic [31:0] summator;
+  assign summator = PC + jal_mult;  // импортозамещение
+   adder32 pc_adder(
+    .a_i(PC),                  
+    .b_i(jal_mult),                  
+    .sum_o(summator),                
+    .carry_i('0)                     // Вход переноса (не используется здесь)
+  );
 
 
 
