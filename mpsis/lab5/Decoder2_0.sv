@@ -55,17 +55,17 @@ assign opcode = fetched_instr_i[6:2];
  //#####################################################################################################################################################################################################
     case (opcode)
 //#####################################################################################################################################################################################################
-STORE_OPCODE: begin
-          mem_req_o = 1;
-          gpr_we_o = 0;
-          mem_we_o = 1;
-          b_sel_o = OP_B_IMM_S;
-         case(funct3)
-                LDST_B, LDST_H, LDST_W: mem_size_o = funct3;    // проверка на соответсвия командам размера 
-
-            default : begin illegal_instr_o = 1;  mem_req_o = 0; mem_we_o = 0; end
-          endcase
-        end
+    STORE_OPCODE: begin
+              mem_req_o = 1;
+              gpr_we_o = 0;
+              mem_we_o = 1;
+              b_sel_o = OP_B_IMM_S;
+             case(funct3)
+                    LDST_B, LDST_H, LDST_W: mem_size_o = funct3;    // проверка на соответсвия командам размера 
+    
+                default : begin illegal_instr_o = 1;  mem_req_o = 0; mem_we_o = 0; end
+              endcase
+            end
 //#####################################################################################################################################################################################################                                                                                  
 //        store:                                            store : STORE	01000	Записать в память по адресу rs1+imm данные из rs2	Mem[rs1 + imm] = rs2
 //  mem_req_o = 1;                                          1. Запись в память mem_req_o = 1 => доступ к памяти
@@ -79,16 +79,16 @@ STORE_OPCODE: begin
 //  mem_size_o = 3'd0;                                      8. Ставим размер записываемого mem_size_o = 3'd0 
 // получается записываем в память по адрессу [rs1 + imm]                                                                                      
 //#####################################################################################################################################################################################################
- LOAD_OPCODE: begin
-          mem_req_o = 1;
-          gpr_we_o = 1;
-          wb_sel_o = 1;
-          b_sel_o = OP_B_IMM_I;
-          case(funct3)
-                LDST_B, LDST_H, LDST_W, LDST_BU, LDST_HU: mem_size_o = funct3;    // проверка на соответсвия командам размера 
-          default: begin illegal_instr_o = 1; mem_req_o = 0; gpr_we_o = 0; end    // иначе ошибка операции  запрет на изменения
-            endcase
-        end 
+     LOAD_OPCODE: begin
+              mem_req_o = 1;
+              gpr_we_o = 1;
+              wb_sel_o = 1;
+              b_sel_o = OP_B_IMM_I;
+              case(funct3)
+                    LDST_B, LDST_H, LDST_W, LDST_BU, LDST_HU: mem_size_o = funct3;    // проверка на соответсвия командам размера 
+              default: begin illegal_instr_o = 1; mem_req_o = 0; gpr_we_o = 0; end    // иначе ошибка операции  запрет на изменения
+                endcase
+            end 
 //#####################################################################################################################################################################################################
 //    Load:                                                 store : LOAD	00000	Записать в rd данные из памяти по адресу rs1+imm	rd = Mem[rs1 + imm]
 //mem_req_o = 1;                                            1. Запись в память mem_req_o = 1 => доступ к памяти
@@ -231,34 +231,29 @@ STORE_OPCODE: begin
           
           //Выставление флага на разрешение записи в рестровый файл          
           gpr_we_o = 1;
-
-          //fetched_instr_i[31:25] - func7, fetched_instr_i[14:12] - func3 
-          case(funct3)
-                3'b000 : case(funct7)
-                        7'b0100000 : alu_op_o = ALU_SUB;
-                        7'b0000000 : alu_op_o = ALU_ADD;
+            case(funct7)
+                    7'b0100000 :case(funct3)
+                         3'b000 : alu_op_o = ALU_SUB;
+                         3'b101: alu_op_o = ALU_SRA;
                          default: begin illegal_instr_o = 1; gpr_we_o = 0; end
-                         endcase
-                         
-                 
-                3'b001: alu_op_o = ALU_SLL;
-                3'b010: alu_op_o = ALU_SLTS;
-                3'b011: alu_op_o = ALU_SLTU;
-                3'b100: alu_op_o = ALU_XOR;
-                3'b101:  case(funct7)
-                        7'b0100000 : alu_op_o = ALU_SRA;
-                        7'b0000000 : alu_op_o = ALU_SRL;
-                         default: begin illegal_instr_o = 1; gpr_we_o = 0; end
-                         endcase
-                3'b110: alu_op_o = ALU_OR;
-                3'b111: alu_op_o = ALU_AND;
-            //В случаи некорректной команды запрещаем запись
-            //в регистровый файл и выставляем флаг illegal_instr_o 
+                         endcase 
+                    7'b0000000 :case(funct3)      
+                          3'b001: alu_op_o = ALU_SLL;
+                        3'b010: alu_op_o = ALU_SLTS;
+                        3'b011: alu_op_o = ALU_SLTU;
+                        3'b100: alu_op_o = ALU_XOR;
+                        3'b110: alu_op_o = ALU_OR;
+                        3'b111: alu_op_o = ALU_AND;
+                        3'b101:alu_op_o = ALU_SRL;
+                        3'b000: alu_op_o = ALU_ADD;
+                        default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+                        endcase
             default: begin illegal_instr_o = 1; gpr_we_o = 0; end
-          endcase
-        end
+            endcase
+         end   
       //ALU операция с регистром и констанaтой
-        OP_IMM_OPCODE: begin
+      
+      OP_IMM_OPCODE: begin
           
           //Выставление флага на разрешение записи в рестровый файл
           gpr_we_o = 1;
@@ -268,13 +263,16 @@ STORE_OPCODE: begin
           
           //case для сдвигов на константную величину 
           case(funct3)
-               3'b001: alu_op_o = ALU_SLL;
+               3'b001:  case(funct7)
+                            7'b0:alu_op_o = ALU_SLL;
+                            default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+                            endcase
+ 
                 3'b101: case(funct7)
-                       7'b0: alu_op_o = ALU_SRL;
-                        7'b0100000: alu_op_o = ALU_SRA;
-          
-                default: begin illegal_instr_o = 1; gpr_we_o = 0; end
-                endcase
+                            7'b0: alu_op_o = ALU_SRL;
+                            7'b0100000: alu_op_o = ALU_SRA;
+                            default: begin illegal_instr_o = 1; gpr_we_o = 0; end
+                            endcase
                 3'd0 : alu_op_o = ALU_ADD;
                 3'd2 : alu_op_o = ALU_SLTS;
                 3'd3 : alu_op_o = ALU_SLTU;
@@ -300,32 +298,35 @@ STORE_OPCODE: begin
 //#####################################################################################################################################################################################################
   SYSTEM_OPCODE: begin
             case(funct3)
-              3'b000: begin
-                case(funct7)
-                  7'b000_0000: begin illegal_instr_o = 1'd1; gpr_we_o = 1'd0; end
-                  7'b000_0001: begin illegal_instr_o = 1'd1; gpr_we_o = 1'd0; end
-                  default:
-                    case(fetched_instr_i[31:0])
-                      32'b00110000001000000000000001110011: mret_o = 1'd1;
-                      default: illegal_instr_o = 1'd1;
-                    endcase
-                endcase
-              end
-              CSR_RW,CSR_RS, CSR_RC, CSR_RWI, CSR_RSI, CSR_RCI: begin
-                gpr_we_o = 1'd1;
-                wb_sel_o = WB_CSR_DATA;
-                csr_we_o = 1'd1;
-                csr_op_o = fetched_instr_i[14:12];
-                end
+                          3'b000: begin 
+                            case(funct7)
+                              7'b000_0000: begin illegal_instr_o = 1'd1; gpr_we_o = 1'd0; end
+                              7'b000_0001: begin illegal_instr_o = 1'd1; gpr_we_o = 1'd0; end
+                              default:
+                                        case(fetched_instr_i[31:0])
+                                          32'b00110000001000000000000001110011: mret_o = 1'd1;
+                                          default: illegal_instr_o = 1'd1;
+                                        endcase
+                              endcase
+                              end
+              
+                          CSR_RW,CSR_RS, CSR_RC, CSR_RWI, CSR_RSI, CSR_RCI: begin
+                            gpr_we_o = 1'd1;
+                            wb_sel_o = WB_CSR_DATA;
+                            csr_we_o = 1'd1;
+                            csr_op_o = fetched_instr_i[14:12];
+                            end
               default: begin illegal_instr_o = 1'd1;gpr_we_o = 1'd0; end
             endcase
           end
-          default: begin illegal_instr_o = 1'd1;gpr_we_o = 1'd0; end
-      endcase
-    end
-    else begin 
+//#####################################################################################################################################################################################################
+    
+          
+      default: begin illegal_instr_o = 1'd1;gpr_we_o = 1'd0; end
+    endcase     
+end
+else begin 
       illegal_instr_o = 1; 
     end
     end
 endmodule
-
