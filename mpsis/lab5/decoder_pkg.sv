@@ -14,7 +14,6 @@ package decoder_pkg;
   import csr_pkg::*;
 
   // opcodes
- // opcodes
   localparam LOAD_OPCODE     = 5'b00_000;
   localparam MISC_MEM_OPCODE = 5'b00_011;
   localparam OP_IMM_OPCODE   = 5'b00_100;
