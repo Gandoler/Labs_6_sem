@@ -17,11 +17,6 @@ module processor_core (
   localparam ZERO = 32'd0;
   localparam FOUR = 32'd4;
 
-
-  // сумматор RD1 и SE_imm_I
-  logic [31:0] sum;
-  logic [31:0] sum_const;
-
   // получаемые константы
   logic [11:0] imm_I;
   logic [11:0] imm_S;
@@ -79,8 +74,9 @@ module processor_core (
   logic [31:0] branch_mult;
 //#########################################################################
 //   получение значений с команд и суматоров
-    //assign sum = RD1 + SE_imm_I; // самый 
-    // Модуль сумматора 
+//   сумматор RD1 и SE_imm_I ---------------------тот что самый левый
+  logic [31:0] sum;
+  logic [31:0] sum_const;
   adder32 pc_adder( // импортозамещение
     .a_i(RD1),                  
     .b_i(SE_imm_I),                  
@@ -167,7 +163,14 @@ module processor_core (
     .sum_o(summator),                
     .carry_i('0)                     // Вход переноса (не используется здесь)
   );
-
+//#########################################################################
+//    мультиплексор jalr
+  always_comb begin
+    case(jalr)
+      1'b0: sum_for_PC = summator;
+      1'b1: sum_for_PC = sum_const;
+    endcase
+  end
 
 
 endmodule
