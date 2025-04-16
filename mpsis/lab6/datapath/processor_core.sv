@@ -166,26 +166,7 @@ module processor_core (
     .sum_o(summator),                
     .carry_i('0)                     // Вход переноса (не используется здесь)
   );
-//#########################################################################
-//    мультиплексор jalr
-  always_comb begin
-    case(jalr)
-      1'b0: sum_for_PC = summator;
-      1'b1: sum_for_PC = sum_const;
-    endcase
-  end
-//#########################################################################
-//  модуль pc
-  always_ff @(posedge clk_i) begin
-    if(rst_i) begin
-      PC <= ZERO;
-    end 
-    else begin
-      if(!stall_i)
-        PC = sum_for_PC;
-      end
-    end
-  
+
 //#########################################################################
 
    //подключение main_decoder
@@ -233,4 +214,36 @@ module processor_core (
   assign instr_addr_o = PC;
   assign mem_addr_o = result_o;
   assign mem_wd_o = RD2;
+  //#########################################################################
+//  модуль pc
+
+//    мультиплексор jalr
+  always_comb begin
+    case(jalr)
+      1'b0: sum_for_PC = summator;
+      1'b1: sum_for_PC = sum_const;
+    endcase
+  end
+  
+//always_ff @(posedge clk_i) begin
+//    if (!stall_i) begin
+//        if (rst_i) PC <= ZERO;
+//        else PC <= jalr ? sum_const : sum_for_PC;//    мультиплексор jalr
+
+//    end
+    
+//    if (jal || jalr) RD1 <= PC + FOUR;
+//end
+
+
+  always_ff @(posedge clk_i) begin
+    if(rst_i) begin
+      PC <= ZERO;
+    end 
+    else begin
+      if(!stall_i)
+        PC = sum_for_PC;
+      end
+    end
+
 endmodule
