@@ -1,5 +1,5 @@
 module processor_core (
-  input  logic        clk_i,
+   input  logic        clk_i,
   input  logic        rst_i,
 
   input  logic        stall_i,
@@ -107,7 +107,7 @@ module processor_core (
   assign ZE_imm_Z = { 27'd0, imm_Z};
 
 //    появился вход stall_i, приостанавливающий обновление программного счётчика.
-  assign WE = gpr_we && stall_i; // для остановки
+  assign WE = gpr_we && !stall_i; // запись только когда нет остановки
 //#########################################################################
 //    мультиплексор для выбора операнда  a_i
   always_comb begin
@@ -249,7 +249,7 @@ module processor_core (
     end 
     else begin
       if(!stall_i)
-        PC = sum_for_PC;
+        PC <= sum_for_PC;
       end
        if (jal || jalr) RD1 <= PC + FOUR;
     end
