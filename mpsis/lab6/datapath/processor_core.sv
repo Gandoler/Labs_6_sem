@@ -29,7 +29,7 @@ module processor_core (
 //######################################################################### 
 //              Декодер
   
-  logic         b;//2л
+  logic         branchik;//2л
   logic         jal;//3л
   logic         jalr;//4л
   logic         mret;//5л
@@ -85,8 +85,8 @@ module processor_core (
     .carry_i('0)                     // Вход переноса (не используется здесь)
   );
 
-  logic [31:0] sum_const;
-  assign sum_const = { sum[31:1], 1'b0 }; // делаем сумму четной 
+  logic [31:0] sum_left_mul;
+  assign sum_left_mul = { sum[31:1], 1'b0 }; // делаем сумму четной 
   // Обратите внимание, что младший бит этой суммы должен быть обнулен  таково требование спецификации [1, стр. 28].
 //#########################################################################
   assign RA1 = instr_i[19:15];   // адресс 1 регистра из инструкции
@@ -130,6 +130,17 @@ module processor_core (
       default: b_i = 0;
     endcase
   end
+  //#########################################################################
+//    сумматор переходов
+  logic [31:0] summator;
+//    assign summator = PC + jal_mult;  
+   adder32 pc_adder2(// импортозамещение
+    .a_i(PC),                  
+    .b_i(jal_mult),                  
+    .sum_o(summator),                
+    .carry_i('0)                     // Вход переноса (не используется здесь)
+  );
+
 //#########################################################################
 //     мультиплексор для wb_data
   always_comb begin
@@ -143,30 +154,32 @@ module processor_core (
 //#########################################################################
 //     мультиплексор branch
   always_comb begin
-    case(b)
+    case(branchik)
       1'b0: branch_mult = SE_imm_J;
       1'b1: branch_mult = SE_imm_B;
     endcase
+    
+
   end
 //#########################################################################
 //    мультиплексор jal
   always_comb begin
-    case((flag && b) || jal)
+    case((flag && branchik) || jal)
       1'b0: jal_mult = FOUR;
       1'b1: jal_mult = branch_mult;
     endcase
   end
+  
 //#########################################################################
-//    сумматор переходов
-  logic [31:0] summator;
-//    assign summator = PC + jal_mult;  
-   adder32 pc_adder2(// импортозамещение
-    .a_i(PC),                  
-    .b_i(jal_mult),                  
-    .sum_o(summator),                
-    .carry_i('0)                     // Вход переноса (не используется здесь)
-  );
 
+  //    мультиплексор jalr
+  always_comb begin
+    case(jalr)
+      1'b0: sum_for_PC = summator;
+      1'b1: sum_for_PC = sum_left_mul;
+    endcase
+  end
+  
 //#########################################################################
 
    //подключение main_decoder
@@ -183,7 +196,7 @@ module processor_core (
   .gpr_we_o(gpr_we),
   .wb_sel_o(wb_sel),
   .illegal_instr_o(illegal_instr),
-  .branch_o(branch),
+  .branch_o(branchik),
   .jal_o(jal),
   .jalr_o(jalr),
   .mret_o(mret)
@@ -217,13 +230,7 @@ module processor_core (
   //#########################################################################
 //  модуль pc
 
-//    мультиплексор jalr
-  always_comb begin
-    case(jalr)
-      1'b0: sum_for_PC = summator;
-      1'b1: sum_for_PC = sum_const;
-    endcase
-  end
+
   
 //always_ff @(posedge clk_i) begin
 //    if (!stall_i) begin
@@ -244,6 +251,8 @@ module processor_core (
       if(!stall_i)
         PC = sum_for_PC;
       end
+       if (jal || jalr) RD1 <= PC + FOUR;
     end
+   
 
 endmodule
