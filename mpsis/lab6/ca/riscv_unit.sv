@@ -1,24 +1,3 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 08.10.2023 18:10:07
-// Design Name: 
-// Module Name: riscv_unit
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module riscv_unit(
     input logic clk_i,
@@ -50,7 +29,7 @@ module riscv_unit(
     
     assign irq_req = 32'd0;
     
-    // подключение лоад стор юнит
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ РјРѕРґСѓР»СЏ Load/Store
     riscv_lsu Load_Store_Unit (
         .rst_i(rst_i),
         .core_rd_o(core_rd),
@@ -70,13 +49,13 @@ module riscv_unit(
         .clk_i(clk_i)
     );
     
-    // подключение памяти инструкций
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ РјРѕРґСѓР»СЏ РїР°РјСЏС‚Рё РёРЅСЃС‚СЂСѓРєС†РёР№
     instr_mem Instruction_Memory (
         .addr_i(instr_addr),
         .read_data_o(instr)
     );
     
-    // подключение внешней памяти
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ РІРЅРµС€РЅРµР№ РїР°РјСЏС‚Рё
     ext_mem Data_Memory (
         .clk_i(clk_i),
         .read_data_o(RD),
@@ -88,7 +67,7 @@ module riscv_unit(
         .addr_i(A)
     );
     
-    // подключение процессорного ядра
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ РїСЂРѕС†РµСЃСЃРѕСЂРЅРѕРіРѕ СЏРґСЂР°
     riscv_core Core (
         .clk_i(clk_i),
         .rst_i(rst_i),
