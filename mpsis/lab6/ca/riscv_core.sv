@@ -1,23 +1,4 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 08.10.2023 15:06:26
-// Design Name: 
-// Module Name: riscv_core
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+
 module riscv_core(
     input logic         clk_i,
     input logic         rst_i,
@@ -39,19 +20,18 @@ module riscv_core(
     localparam   ZERO = 32'd0;
     localparam   FOUR = 32'd4;
     
-    // сумматор RD1 and SE_imm_I
+    // РЎСѓРјРјР°С‚РѕСЂС‹ RD1 Рё SE_imm_I
     logic [31:0] sum;
     logic [31:0] sum_const;
     
-    // шины для знакорасширения SE или обычного расширения
+    // РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ SE РёР· СЂР°Р·Р»РёС‡РЅС‹С… С‚РёРїРѕРІ РЅРµРјРµРґР»РµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№
     logic [11:0] imm_I;
     logic [11:0] imm_S;
     logic [12:0] imm_B;
     logic [20:0] imm_J; 
     logic [ 4:0] imm_Z;
 
-    // шины связи для декодера
- // logic [31:0] instr_i;
+    // РЎРёРіРЅР°Р»С‹ РѕС‚ РґРµРєРѕРґРµСЂР°
     logic        b;
     logic        jal;
     logic        jalr;
@@ -67,7 +47,7 @@ module riscv_core(
     logic        mem_req;
     logic        mem_we;
 
-    // шины связи регистрового файла
+    // РЎРёРіРЅР°Р»С‹ РґР»СЏ СЂРµРіРёСЃС‚СЂРѕРІРѕРіРѕ С„Р°Р№Р»Р°
     logic [ 4:0] RA1;
     logic [ 4:0] RA2;
     logic [ 4:0] WA;
@@ -76,57 +56,48 @@ module riscv_core(
     logic        WE;
     logic [31:0] wb_data;
     
-    // для мультиплексора для выбора значения a
- // logic [31:0] RD2;   
- // logic [31:0] PC;
- // localparam   ZERO;
- 
-    // для мультиплексора для выбора значения b
- // logic [31:0] RD2;
+    // Р Р°СЃС€РёСЂРµРЅРёСЏ РЅРµРјРµРґР»РµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№
     logic [31:0] SE_imm_I;
     logic [31:0] imm_U;
     logic [31:0] SE_imm_S;
- // localparam   ZERO;
- // localparam   FOUR;
     
-    // шины связи АЛУ
+    // Р’С…РѕРґС‹ ALU
     logic [31:0] a_i;
     logic [31:0] b_i;
     logic [31:0] result_o;
     logic        flag;
     
-    // шины связи с PC
+    // Р Р°Р±РѕС‚Р° СЃ PC
     logic [31:0] sum_for_PC;
     logic [31:0] PC;
     logic [31:0] SE_imm_B;
     logic [31:0] SE_imm_J;
-    logic [31:0] jal_mult;    // выход мультиплексора jal
-    logic [31:0] branch_mult; // выход мультиплексора branch
- // localparam FOUR;
+    logic [31:0] jal_mult;    // РЎРјРµС‰РµРЅРёРµ РґР»СЏ JAL
+    logic [31:0] branch_mult; // РЎРјРµС‰РµРЅРёРµ РґР»СЏ branch
     
-    // шины для связи с CSR контроллером
+    // Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ CSR
     logic [31:0] csr_wd;
     logic [31:0] mie;
     logic [31:0] mtvec;
     logic [31:0] mepc;
     logic [31:0] mcause;
     
-    // шины для связи с контроллером прерываний
+    // Р”Р»СЏ РѕР±СЂР°Р±РѕС‚РєРё РїСЂРµСЂС‹РІР°РЅРёР№
     logic irq;
     logic [31:0] irq_cause;
     
     logic [31:0] mtvec_or_mepc;
     logic [31:0] PC_i;
     
-    // надо закомментить - наверно не надо, не помню, зачем это написал, но теперь здесь стоит флажок
     assign sum = RD1 + SE_imm_I;
     assign sum_const = { sum[31:1], 1'b0 };
     
-    // соединения из instr_i по шинам
+    // РР·РІР»РµС‡РµРЅРёРµ Р°РґСЂРµСЃРѕРІ СЂРµРіРёСЃС‚СЂРѕРІ
     assign RA1   = instr_i[19:15];
     assign RA2   = instr_i[24:20];
-    assign WA    = instr_i[ 11:7];
-    // продолжение
+    assign WA    = instr_i[11:7];
+
+    // РР·РІР»РµС‡РµРЅРёРµ РЅРµРјРµРґР»РµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№
     assign imm_I = instr_i[31:20];
     assign imm_U = { instr_i[31:12], 12'h000 };
     assign imm_S = { instr_i[31:25], instr_i[11:7] };
@@ -134,17 +105,16 @@ module riscv_core(
     assign imm_J = { instr_i[31], instr_i[19:12], instr_i[20], instr_i[30:21], 1'b0 };
     assign imm_Z = instr_i[19:15];
     
-    // условный модуль знакорасширения SE или обычного расширения
+    // Р—РЅР°РєРѕРІРѕРµ Рё РЅСѓР»РµРІРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ
     assign SE_imm_I = { {20{imm_I[11]}}, imm_I };
     assign SE_imm_S = { {20{imm_S[11]}}, imm_S };
     assign SE_imm_B = { {19{imm_B[12]}}, imm_B };
     assign SE_imm_J = { {11{imm_J[20]}}, imm_J };
-    assign ZE_imm_Z = { 27'd0, imm_Z};
-    
+    assign ZE_imm_Z = { 27'd0, imm_Z };
     
     assign WE = (gpr_we && (~(stall_i || trap)));
     
-    // мультиплексор для выбора операнда a_i
+    // Р’С‹Р±РѕСЂ РІС…РѕРґР° A ALU
     always_comb begin
         case(a_sel)
             2'd0: a_i <= RD1;
@@ -155,8 +125,7 @@ module riscv_core(
         endcase
     end
     
-    
-    // мультиплексор для выбора операнда b_i
+    // Р’С‹Р±РѕСЂ РІС…РѕРґР° B ALU
     always_comb begin
         case(b_sel)
             3'd0: b_i <= RD2;
@@ -169,7 +138,7 @@ module riscv_core(
         endcase
     end
     
-    // мультиплексор для wb_data
+    // Р’С‹Р±РѕСЂ РґР°РЅРЅС‹С… РґР»СЏ Р·Р°РїРёСЃРё
     always_comb begin
         case(wb_sel)
             2'd0: wb_data <= result_o;
@@ -180,7 +149,7 @@ module riscv_core(
         endcase
     end
     
-    // мультиплексор branch
+    // РЎРјРµС‰РµРЅРёРµ РґР»СЏ РїРµСЂРµС…РѕРґР°
     always_comb begin
         case(b)
             1'b0: branch_mult <= SE_imm_J;
@@ -188,7 +157,7 @@ module riscv_core(
         endcase
     end
     
-    // мультиплексор jal
+    // РћР±СЂР°Р±РѕС‚РєР° JAL
     always_comb begin
         case((flag && b) || jal)
             1'b0: jal_mult <= FOUR;
@@ -196,11 +165,10 @@ module riscv_core(
         endcase
     end
     
-    // условный модуль сумматора
     logic [31:0] summator;
     assign summator = PC + jal_mult;
     
-    // мультиплексор jalr
+    // РћР±СЂР°Р±РѕС‚РєР° JALR
     always_comb begin
         case(jalr)
             1'b0: sum_for_PC <= summator;
@@ -208,7 +176,7 @@ module riscv_core(
         endcase
     end
     
-    // мультиплексор trap
+    // РћР±СЂР°Р±РѕС‚РєР° trap
     always_comb begin
         case(trap)
             1'b0: mtvec_or_mepc <= mepc;
@@ -216,7 +184,7 @@ module riscv_core(
         endcase
     end
     
-    // мультиплексор mret
+    // РћР±СЂР°Р±РѕС‚РєР° MRET
     always_comb begin
         case(mret)
             1'b0: PC_i <= mtvec_or_mepc;
@@ -224,33 +192,28 @@ module riscv_core(
         endcase
     end
     
-    
-    // условный модуль PC программного счетчика
+    // РЎС‡С‘С‚С‡РёРє РєРѕРјР°РЅРґ
     always_ff @(posedge clk_i or posedge rst_i) begin
-            if(rst_i) begin
-                PC <= ZERO;
-            end else begin
-                if(!stall_i)
-                    PC <= PC_i;
-            end
+        if (rst_i)
+            PC <= ZERO;
+        else if (!stall_i)
+            PC <= PC_i;
     end
     
-    // некоторые нововведения для подключения контроллеров прерывания и CSR
-   
-   assign trap = (irq || ill_instr);
-   
-   assign mem_req_o = (~(trap) && mem_req);
-   assign mem_we_o  = (~(trap) && mem_we);
-   
-   // мультиплексор ill_instr
-   always_comb begin
-      case(ill_instr)
-          1'b0: mcause <= irq_cause;
-          1'b1: mcause <= 32'h0000_0002;
-      endcase
-   end
-        
-    // подключение main_decoder
+    // РћР±СЂР°Р±РѕС‚РєР° РёСЃРєР»СЋС‡РµРЅРёР№ Рё Р·Р°РїСЂРµС‚ РїР°РјСЏС‚Рё РїСЂРё trap
+    assign trap = (irq || ill_instr);
+    assign mem_req_o = (~trap && mem_req);
+    assign mem_we_o  = (~trap && mem_we);
+    
+    // Р—Р°РїРёСЃСЊ РїСЂРёС‡РёРЅС‹ РёСЃРєР»СЋС‡РµРЅРёСЏ
+    always_comb begin
+        case(ill_instr)
+            1'b0: mcause <= irq_cause;
+            1'b1: mcause <= 32'h0000_0002;
+        endcase
+    end
+    
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ РґРµРєРѕРґРµСЂР°
     decoder_riscv Main_decoder (
         .fetched_instr_i(instr_i),
         .branch_o(b),
@@ -264,12 +227,11 @@ module riscv_core(
         .a_sel_o(a_sel),
         .b_sel_o(b_sel),
         .gpr_we_o(gpr_we),
-        // нововведения для контроллеров CSR и прерывания
         .illegal_instr_o(ill_instr),
         .mret_o(mret)
     );
     
-    // подключение Register_File
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ СЂРµРіРёСЃС‚СЂРѕРІРѕРіРѕ С„Р°Р№Р»Р°
     rf_riscv Register_File (
         .clk_i(clk_i),
         .read_addr1_i(RA1),
@@ -281,7 +243,7 @@ module riscv_core(
         .write_enable_i(WE)
     );
     
-    // подключение ALU
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ ALU
     alu_riscv ALU (
         .a_i(a_i),
         .b_i(b_i),
@@ -290,6 +252,7 @@ module riscv_core(
         .result_o(result_o)
     );
     
+    // РљРѕРЅС‚СЂРѕР»Р»РµСЂ CSR
     csr_controller CSR (
         .clk_i(clk_i),
         .rst_i(rst_i),
@@ -307,6 +270,7 @@ module riscv_core(
         .mtvec_o(mtvec)
     );
     
+    // РљРѕРЅС‚СЂРѕР»Р»РµСЂ РїСЂРµСЂС‹РІР°РЅРёР№
     irq_controller IRQ (
         .clk_i(clk_i),
         .rst_i(rst_i),
@@ -319,13 +283,9 @@ module riscv_core(
         .irq_o(irq)
     );
     
-    // соединение выходов
+    // Р’С‹С…РѕРґС‹
     assign instr_addr_o = PC;
     assign mem_addr_o   = result_o;
     assign mem_wd_o     = RD2;
     
-   
-    
 endmodule
-
-
