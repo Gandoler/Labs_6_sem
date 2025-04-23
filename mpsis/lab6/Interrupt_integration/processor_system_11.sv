@@ -1,91 +1,89 @@
 `timescale 1ns / 1ps
 
-/* -----------------------------------------------------------------------------
-* Project Name   : Architectures of Processor Systems (APS) lab work
-* Organization   : National Research University of Electronic Technology (MIET)
-* Department     : Institute of Microdevices and Control Systems
-* Author(s)      : Andrei Solodovnikov
-* Email(s)       : hepoh@org.miet.ru
+module processor_system_11 (
+  input  logic        clk_i,
+  input  logic        rst_i
+);
 
-See https://github.com/MPSU/APS/blob/master/LICENSE file for licensing details.
-* ------------------------------------------------------------------------------
-*/
-module lab_11_tb_processor_system();
+//##############################################################################################
+// instr mem + core
+logic [31:0] instr;
+logic [31:0] instr_addr;
 
-    reg clk;
-    reg rst;
+instr_mem IMemory (
+        .addr_i(instr_addr),            //instr_addr
+        .read_data_o(instr)             //instr
+    );
+//##############################################################################################
+// core + lsu
+logic           stall;
+logic           CORE_REQ;
+logic           CORE_WE;
+logic   [2:0]   CORE_SIZE;
+logic   [31:0]  CORE_WD;
+logic   [31:0]  CORE_ADDR;
+logic   [31:0]  CORE_RD; 
 
-    processor_system_11 DUT(
-    .clk_i(clk),
-    .rst_i(rst)
+logic           irq_req;     // not conected
+logic           irq_ret;  // not conected
+
+ processor_core core(   
+        .clk_i(clk_i),                  //clk_i            
+        .rst_i(rst_i),                  //rst_i
+        .instr_addr_o(instr_addr),      //instr_addr
+        .instr_i(instr),                //instr
+        .mem_rd_i(CORE_RD),                  //mem_rd-----corerd
+        .mem_req_o(CORE_REQ),            // mew_REQ
+        .mem_we_o(CORE_WE),              //men_WE 
+        .mem_size_o(CORE_SIZE),          //mem_szie
+        .mem_wd_o(CORE_WD),              //mem_wd
+        .mem_addr_o(CORE_ADDR),          //mem_addr
+        .stall_i(stall),                 //STAL
+        
+        .irq_req_i(irq_req ),
+        .irq_ret_o(irq_ret)
+    );
+  
+
+//##############################################################################################
+// lsu +    D_MEMORY
+logic           MEM_REQ;
+logic           MEM_WE;
+logic           MEM_READY;
+logic   [3:0]   MEM_BE;
+logic   [31:0]  MEM_WD;
+logic   [31:0]  MEM_A;
+logic   [31:0]  MEM_RD; 
+
+data_mem DMemory (
+        .clk_i(clk_i),                  //clk_i
+        .mem_req_i(MEM_REQ),            //REQ
+        .write_enable_i(MEM_WE),        //WE          
+        .byte_enable_i(MEM_BE),  //BE
+        .write_data_i(MEM_WD),          //WD
+        .addr_i(MEM_A),              //ADDR
+        .read_data_o(MEM_RD),                //RD
+        .ready_o(MEM_READY)
     );
 
-        logic [31:0] RD2;
-        logic [31:0] result_o;
-        logic [31:0] PC;
-        logic [31:0] WD;
-        logic [31:0] instr;   
 
 
-        assign RD2 = DUT.core.mem_wd_o;
-        assign result_o = DUT.core.mem_addr_o;
-        assign PC = DUT.core.instr_addr_o;
-        assign instr = DUT.core.instr_i;
-        assign WD = DUT.core.WD;
-    
-//######################################################################### 
-// dllia proverki csr i irq
-
- logic        irq_ret_o;
- logic [31:0] irq_cause_o;
- logic        irq_o;
- 
-  assign irq_ret_o = DUT.core.IRQ.irq_ret_o;
-  assign irq_cause_o = DUT.core.IRQ.irq_cause_o;
-  assign irq_o = DUT.core.IRQ.irq_o;
-  
-  
-  
-  
-    logic [31:0] read_data_o;
-    logic [31:0] mie_o;
-    logic [31:0] mepc_o;
-    logic [31:0] mtvec_o;
-    logic [31:0] mcause_i;
-    
-  assign mcause_i = DUT.core.CSR.mcause_i;
-  assign read_data_o = DUT.core.CSR.read_data_o;
-  assign mie_o = DUT.core.CSR.mie_o;
-  assign mepc_o = DUT.core.CSR.mepc_o;  
-  assign mtvec_o = DUT.core.CSR.mtvec_o;  
-//######################################################################### 
-
-    
-    initial begin
-      repeat(1000) begin
-        @(posedge clk);
-      end
-      $fatal(1, "Test has been interrupted by watchdog timer");
-    end
-
-    initial clk = 0;
-    always #10 clk = ~clk;
-
-    initial begin
-        $display( "\nTest has been started");
-        DUT.irq_req = 0;
-        rst = 1;
-        #40;
-        rst = 0;
-        repeat(20)@(posedge clk);
-        DUT.irq_req = 1;
-        while(DUT.irq_ret == 0) begin
-          @(posedge clk);
-        end
-        DUT.irq_req = 0;
-        repeat(20)@(posedge clk);
-        $display("\n The test is over \n See the internal signals of the module on the waveform \n");
-        $finish;
-    end
-
+lsu LSU (
+    .clk_i(clk_i),
+    .rst_i(rst_i),
+    .core_req_i(CORE_REQ),
+    .core_we_i(CORE_WE),
+    .core_size_i(CORE_SIZE),
+    .core_addr_i(CORE_ADDR),
+    .core_wd_i(CORE_WD),
+    .core_rd_o(CORE_RD),
+    .core_stall_o(stall),
+    .mem_req_o(MEM_REQ),
+    .mem_we_o(MEM_WE),
+    .mem_be_o(MEM_BE),
+    .mem_addr_o(MEM_A),
+    .mem_wd_o(MEM_WD),
+    .mem_rd_i(MEM_RD),
+    .mem_ready_i(MEM_READY)
+);
 endmodule
