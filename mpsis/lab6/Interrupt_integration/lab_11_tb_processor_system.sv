@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 /* -----------------------------------------------------------------------------
 * Project Name   : Architectures of Processor Systems (APS) lab work
 * Organization   : National Research University of Electronic Technology (MIET)
@@ -13,11 +15,52 @@ module lab_11_tb_processor_system();
     reg clk;
     reg rst;
 
-    processor_system DUT(
+    processor_system_11 DUT(
     .clk_i(clk),
     .rst_i(rst)
     );
 
+        logic [31:0] RD2;
+        logic [31:0] result_o;
+        logic [31:0] PC;
+        logic [31:0] WD;
+        logic [31:0] instr;   
+
+
+        assign RD2 = DUT.core.mem_wd_o;
+        assign result_o = DUT.core.mem_addr_o;
+        assign PC = DUT.core.instr_addr_o;
+        assign instr = DUT.core.instr_i;
+        assign WD = DUT.core.WD;
+    
+//######################################################################### 
+// dllia proverki csr i irq
+
+ logic        irq_ret_o;
+ logic [31:0] irq_cause_o;
+ logic        irq_o;
+ 
+  assign irq_ret_o = DUT.core.IRQ.irq_ret_o;
+  assign irq_cause_o = DUT.core.IRQ.irq_cause_o;
+  assign irq_o = DUT.core.IRQ.irq_o;
+  
+  
+  
+  
+    logic [31:0] read_data_o;
+    logic [31:0] mie_o;
+    logic [31:0] mepc_o;
+    logic [31:0] mtvec_o;
+    logic [31:0] mcause_i;
+    
+  assign mcause_i = DUT.core.CSR.mcause_i;
+  assign read_data_o = DUT.core.CSR.read_data_o;
+  assign mie_o = DUT.core.CSR.mie_o;
+  assign mepc_o = DUT.core.CSR.mepc_o;  
+  assign mtvec_o = DUT.core.CSR.mtvec_o;  
+//######################################################################### 
+
+    
     initial begin
       repeat(1000) begin
         @(posedge clk);
