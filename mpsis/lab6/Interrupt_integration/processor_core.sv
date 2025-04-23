@@ -190,7 +190,7 @@ logic [31:0] irq_cause;
   
 //     мультиплексор mret
   always_comb begin
-    case(trap)
+    case(mret)
       1'b0: mret_mult = trap_mult;
       1'b1: mret_mult = mepc;
     endcase
@@ -304,7 +304,7 @@ assign mem_req_o = !trap && mem_req;
     .rst_i(rst_i),
     .trap_i(trap),
     
-    .pcode_i(csr_op),
+    .opcode_i(csr_op),
     
     .addr_i(instr_i[31:20]),
     .pc_i(PC),
@@ -328,7 +328,7 @@ interrupt_controller IRQ(
   .rst_i(rst_i),
   .exception_i(illegal_instr),
   .irq_req_i(irq_req_i),
-  .mie_i(mie[0]),                                           ////////////tut akkuratno
+  .mie_i(mie[16]),                                           ////////////tut akkuratno
   .mret_i(mret),
   .irq_ret_o(irq_ret_o),
   .irq_cause_o(irq_cause),
