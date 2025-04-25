@@ -30,7 +30,7 @@ module processor_system_13 (
 // lsu +    D_MEMORY
 logic           MEM_REQ;
 logic           MEM_WE;
-//logic           MEM_READY;
+logic         MEM_READY;
 logic   [3:0]   MEM_BE;
 logic   [31:0]  MEM_WD;
 logic   [31:0]  MEM_A;
@@ -46,8 +46,8 @@ sys_clk_rst_gen divider(.ex_clk_i(clk_i),.ex_areset_n_i(resetn_i),.div_i(10),.sy
 
 
 
-logic           MEM_READY;          // tut edenitca vsegda
-logic [255:0] per_sel;              // edinsvenniy 256 na risunke
+
+logic [255:0] OneHot;              // edinsvenniy 256 na risunke
 logic ps2_sb_ctrl_req;              // rezultat druzbi posle i
 logic MEM_REQ;              
 logic vga_req; 
@@ -63,15 +63,15 @@ assign MEM_READY = 1'b1; // kak v labe edentca
                             
 //assign per_sel = 255'b1 << MEM_A[31:24]; // tut reshaem kto rabotaet
 
-assign per_sel =  MEM_A[31:24]; // tut reshaem kto rabotaet
+assign OneHot = 255'b1 <<  MEM_A[31:24]; // tut reshaem kto rabotaet
 assign DATA_MULT =  MEM_A[31:24];
 
 
 assign A = {8'd0, MEM_A[23:0]};
 
-assign MEM_REQ = per_sel[3] && LSU_REQ; // dlia req Dmemory
-assign ps2_sb_ctrl_req = per_sel[3] && LSU_REQ; // dlia req ps2
-assign vga_req = per_sel[7] & LSU_REQ;
+assign MEM_REQ = OneHot[0] && LSU_REQ; // dlia req Dmemory
+assign ps2_sb_ctrl_req = OneHot[3] && LSU_REQ; // dlia req ps2
+assign vga_req = OneHot[7] & LSU_REQ;
 
 //##############################################################################################
 
@@ -101,8 +101,8 @@ logic   [31:0]  CORE_WD;
 logic   [31:0]  CORE_ADDR;
 logic   [31:0]  CORE_RD; 
 
-logic           irq_req;     // not conected
-logic           irq_ret;  // not conected
+logic           irq_req = 0;     // not conected
+logic           irq_ret =0;  // not conected
 
  processor_core core(   
         .clk_i(sysclk),                  //clk_i            
@@ -152,7 +152,7 @@ data_mem DMemory (
         .write_enable_i(MEM_WE),        //WE          
         .byte_enable_i(MEM_BE),  //BE
         .write_data_i(MEM_WD),          //WD
-        .addr_i(MEM_A),              //ADDR
+        .addr_i(A),              //ADDR
         .read_data_o(MEM_RD),                //RD
         .ready_o(MEM_READY)
     );
@@ -164,7 +164,9 @@ ps2_sb_ctrl ps2_sb_ctrl(
     .req_i          (ps2_sb_ctrl_req),
     .write_data_i   (MEM_WD),
     .write_enable_i (MEM_WE),
-    .read_data_o    (mem_rd_ps2)          
+    .read_data_o    (mem_rd_ps2)  ,   
+    .interrupt_request_o(irq_req),
+    .interrupt_return_i(irq_ret)    
 
 );
 
