@@ -27,7 +27,7 @@ logic [31:0] ram [DATA_MEM_SIZE_WORDS];
 
 // Добавленная инициализация памяти
 initial begin
-  $readmemh("lab_13_ps2_ascii_data.mem", ram);
+  $readmemh("lab_13_ps2ascii_data.mem", ram);
 end
 
 always_ff @(posedge clk_i) begin
