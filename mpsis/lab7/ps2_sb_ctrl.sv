@@ -1,4 +1,31 @@
- logic [7:0] scan_code;
+module ps2_sb_ctrl(
+    /*
+        Часть интерфейса модуля, отвечающая за подключение к системной шине
+    */
+    input  logic         clk_i,
+    input  logic         rst_i,
+    input  logic [31:0]  addr_i,
+    input  logic         req_i,
+    input  logic [31:0]  write_data_i,
+    input  logic         write_enable_i,
+    output logic [31:0]  read_data_o,
+
+    /*
+        Часть интерфейса модуля, отвечающая за отправку запросов на прерывание
+        процессорного ядра
+    */
+    output logic        interrupt_request_o,
+    input  logic        interrupt_return_i,
+
+    /*
+        Часть интерфейса модуля, отвечающая за подключение к модулю,
+        осуществляющему прием данных с клавиатуры
+    */
+    input  logic kclk_i,
+    input  logic kdata_i
+);
+
+    logic [7:0] scan_code;
     logic       scan_code_is_unread;
     
     assign interrupt_request_o = scan_code_is_unread;
