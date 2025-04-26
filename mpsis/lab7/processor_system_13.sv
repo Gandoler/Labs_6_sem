@@ -64,6 +64,7 @@ assign MEM_READY = 1'b1; // kak v labe edentca
 //assign per_sel = 255'b1 << MEM_A[31:24]; // tut reshaem kto rabotaet
 
 assign OneHot = 255'b1 <<  MEM_A[31:24]; // tut reshaem kto rabotaet
+logic [7:0] DATA_MULT;
 assign DATA_MULT =  MEM_A[31:24];
 
 
@@ -77,9 +78,9 @@ assign vga_req = OneHot[7] & LSU_REQ;
 
 always_comb begin
     case(DATA_MULT)
-        8'd0: MEM_RD = MEM_RD_memory;
-         8'd3: MEM_RD = mem_rd_ps2;
-          8'd7: MEM_RD = mem_rd_vga;
+        8'h0: MEM_RD = MEM_RD;
+         8'h3: MEM_RD = mem_rd_ps2;
+          8'h7: MEM_RD = mem_rd_vga;
  endcase
 end
 //##############################################################################################
@@ -153,11 +154,11 @@ data_mem DMemory (
         .byte_enable_i(MEM_BE),  //BE
         .write_data_i(MEM_WD),          //WD
         .addr_i(A),              //ADDR
-        .read_data_o(MEM_RD_memory),                //RD
+        .read_data_o(MEM_RD),                //RD
         .ready_o(MEM_READY)
     );
 
-ps2_sb_ctrl ps2_sb_ctrl(
+ps2_sb_ctrl ps2_sb_ctrl(         // tut oooochen akuratno
     .clk_i          (sysclk),
     .rst_i          (rst),
     .addr_i         (A),
@@ -166,7 +167,10 @@ ps2_sb_ctrl ps2_sb_ctrl(
     .write_enable_i (MEM_WE),
     .read_data_o    (mem_rd_ps2)  ,   
     .interrupt_request_o(irq_req),
-    .interrupt_return_i(irq_ret),    
+    .interrupt_return_i(irq_ret),
+    
+    
+        
     .kclk_i(kclk_i),
     .kdata_i(kdata_i)
 );
