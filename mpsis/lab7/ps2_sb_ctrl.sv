@@ -30,7 +30,6 @@ module ps2_sb_ctrl(
     
     assign interrupt_request_o = scan_code_is_unread;
     // promejutki
-    logic        kdata;       
     logic [7:0]  keycode_o;
     logic         keycode_valid_o;
 
@@ -39,7 +38,7 @@ module ps2_sb_ctrl(
         .clk_i(clk_i),
         .rst_i(rst_i),
         .kclk_i(kclk_i),
-        .kdata_i(kdata),
+        .kdata_i(kdata_i),
         .keycodeout_o(keycode_o),
         .keycode_valid_o(keycode_valid_o)
     );
@@ -56,10 +55,13 @@ module ps2_sb_ctrl(
             if (keycode_valid_o) begin
                 scan_code <= keycode_o;
                 scan_code_is_unread <= 1'b1;
+                if ( req_i && !write_enable_i&& addr_i==32'h00) begin
+                        read_data_o <= { 24'b0, scan_code};
+                    end
                 
-            end else if ( req_i && !write_enable_i&& addr_i==32'h0) begin
+            end else if ( req_i && !write_enable_i&& addr_i==32'h00) begin
 
-                                        read_data_o <=  scan_code;
+                                        read_data_o <= { 24'b0, scan_code};
                                         scan_code_is_unread <= 1'b0;
                                         
             end else if  (interrupt_return_i) begin
