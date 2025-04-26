@@ -77,7 +77,7 @@ assign vga_req = OneHot[7] & LSU_REQ;
 
 always_comb begin
     case(DATA_MULT)
-        8'd0: MEM_RD = MEM_RD;
+        8'd0: MEM_RD = MEM_RD_memory;
          8'd3: MEM_RD = mem_rd_ps2;
           8'd7: MEM_RD = mem_rd_vga;
  endcase
@@ -153,7 +153,7 @@ data_mem DMemory (
         .byte_enable_i(MEM_BE),  //BE
         .write_data_i(MEM_WD),          //WD
         .addr_i(A),              //ADDR
-        .read_data_o(MEM_RD),                //RD
+        .read_data_o(MEM_RD_memory),                //RD
         .ready_o(MEM_READY)
     );
 
@@ -166,8 +166,9 @@ ps2_sb_ctrl ps2_sb_ctrl(
     .write_enable_i (MEM_WE),
     .read_data_o    (mem_rd_ps2)  ,   
     .interrupt_request_o(irq_req),
-    .interrupt_return_i(irq_ret)    
-
+    .interrupt_return_i(irq_ret),    
+    .kclk_i(kclk_i),
+    .kdata_i(kdata_i)
 );
 
 
