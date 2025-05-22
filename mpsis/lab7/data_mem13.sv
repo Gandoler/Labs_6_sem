@@ -5,7 +5,7 @@
 * Organization   : National Research University of Electronic Technology (MIET)
 * Department     : Institute of Microdevices and Control Systems
 * Author(s)      : Andrei Solodovnikov
-* Email(s)       : hepoh@org.miet.ru
+* Email(s) a      : hepoh@org.miet.ru
 
 See https://github.com/MPSU/APS/blob/master/LICENSE file for licensing details.
 * ------------------------------------------------------------------------------
