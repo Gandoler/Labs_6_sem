@@ -81,7 +81,7 @@ always_comb begin
         8'h0: MEM_RD = MEM_RD_TMP;
          8'h3: MEM_RD = mem_rd_ps2;
           8'h7: MEM_RD = mem_rd_vga;
-           default : MEM_RD = MEM_RD;
+           default : MEM_RD=32'b0;
  endcase
 end
 //##############################################################################################
