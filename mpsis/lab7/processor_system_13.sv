@@ -35,7 +35,7 @@ logic   [3:0]   MEM_BE;
 logic   [31:0]  MEM_WD;
 logic   [31:0]  MEM_A;
 logic   [31:0]  MEM_RD; 
-
+logic [31:0] MEM_RD_TMP;
 //##############################################################################################
 
 //##############################################################################################
@@ -78,9 +78,10 @@ assign vga_req = OneHot[7] & LSU_REQ;
 
 always_comb begin
     case(DATA_MULT)
-        8'h0: MEM_RD = MEM_RD;
+        8'h0: MEM_RD = MEM_RD_TMP;
          8'h3: MEM_RD = mem_rd_ps2;
           8'h7: MEM_RD = mem_rd_vga;
+           default : MEM_RD = MEM_RD;
  endcase
 end
 //##############################################################################################
@@ -102,8 +103,8 @@ logic   [31:0]  CORE_WD;
 logic   [31:0]  CORE_ADDR;
 logic   [31:0]  CORE_RD; 
 
-logic           irq_req = 0;     // not conected
-logic           irq_ret =0;  // not conected
+logic           irq_req;     // not conected
+logic           irq_ret;  // not conected
 
  processor_core core(   
         .clk_i(sysclk),                  //clk_i            
@@ -154,7 +155,7 @@ data_mem DMemory (
         .byte_enable_i(MEM_BE),  //BE
         .write_data_i(MEM_WD),          //WD
         .addr_i(A),              //ADDR
-        .read_data_o(MEM_RD),                //RD
+        .read_data_o(MEM_RD_TMP),                //RD
         .ready_o()         // тут мем реди
     );
 
