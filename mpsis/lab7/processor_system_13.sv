@@ -155,7 +155,7 @@ data_mem DMemory (
         .write_data_i(MEM_WD),          //WD
         .addr_i(A),              //ADDR
         .read_data_o(MEM_RD),                //RD
-        .ready_o(MEM_READY)
+        .ready_o()         // тут мем реди
     );
 
 ps2_sb_ctrl ps2_sb_ctrl(         // tut oooochen akuratno
@@ -182,7 +182,7 @@ vga_sb_ctrl vga_sb_ctrl(
     .rst_i          (rst),
     .req_i          (vga_req),
     .write_enable_i (MEM_WE),
-    .mem_be_i       (),                     /// tut akuratno
+    .mem_be_i       (MEM_BE),                     /// tut akuratno
     .addr_i         (A),
     .write_data_i   (MEM_WD),
     .read_data_o    (mem_rd_vga),
