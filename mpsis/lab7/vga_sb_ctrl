@@ -87,5 +87,5 @@ vgachargen vgachar_inst
   
     endcase
     end
-
+//s
 endmodule
