@@ -71,6 +71,12 @@ vgachargen vgachar_inst
 
   // Мультиплексирование сигналов write_enable_i
   always_comb begin
+                           char_tiff_req_i = 1'b0;
+                           char_tiff_we_i =  1'b0;
+                           col_map_req_i = 1'b0;
+                           col_map_we_i = 1'b0;
+                           char_map_req_i = 1'b0;
+                           char_map_we_i  = 1'b0;
     case(addr_i[13:12])
         2'b00: begin char_map_req_i = req_i;
                        char_map_we_i = write_enable_i;
@@ -84,7 +90,10 @@ vgachargen vgachar_inst
                         char_tiff_we_i = write_enable_i;
                          read_data_o = char_tiff_rdata;
                 end
-  
+           default :begin 
+                           read_data_o = 32'b0;
+                          
+            end   
     endcase
     end
 //s
