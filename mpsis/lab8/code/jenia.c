@@ -2,6 +2,7 @@
 #include "platform.h"
 
 #define PS2_ENTER 0x5A
+const int  a = 1;
 
 // Функция для подсчета количества непересекающихся вхождений "11" в двоичном представлении
 int progres(uint32_t value) {
@@ -38,8 +39,8 @@ void display_result(uint32_t count) {
     }
 
     for (int i = 0; str[i] != '\0'; i++) {
-        char_map[i] = str[i];
-        color_map[i] = 0x0F; // Белый цвет
+        vga.char_map[i] = str[i];
+        vga.color_map[i] = 0x0F; // Белый цвет
     }
 }
 
