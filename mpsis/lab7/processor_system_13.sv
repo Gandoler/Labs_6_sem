@@ -158,7 +158,7 @@ data_mem DMemory (
         .ready_o()         // тут мем реди
     );
 
-ps2_sb_ctrl ps2_sb_ctrl(         // tut oooochen akuratno
+ps2_sb_ctrl ps2_sb_ctrl(         // tut oooochen akuratno333
     .clk_i          (sysclk),
     .rst_i          (rst),
     .addr_i         (A),
